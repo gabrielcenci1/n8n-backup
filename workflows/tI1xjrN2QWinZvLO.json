@@ -1,0 +1,363 @@
+{
+  "active": false,
+  "connections": {
+    "LISTAR CONTATOS NO CRM": {
+      "main": [
+        [
+          {
+            "node": "Criar contato no CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formata o Número": {
+      "main": [
+        [
+          {
+            "node": "Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data": {
+      "main": [
+        [
+          {
+            "node": "Nome e Sobrenome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nome e Sobrenome": {
+      "main": [
+        [
+          {
+            "node": "Origem do Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Origem do Lead": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dados": {
+      "main": [
+        [
+          {
+            "node": "Formata o Número",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "LISTAR CONTATOS NO CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-02-17T11:32:44.661Z",
+  "id": "tI1xjrN2QWinZvLO",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Cadastro RD Station",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://crm.rdstation.com/api/v1/contacts",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "67b2c677ee87d1001837658a"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -80,
+        -160
+      ],
+      "id": "fc916360-6159-47c4-aa55-1a590db64999",
+      "name": "LISTAR CONTATOS NO CRM"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://crm.rdstation.com/api/v1/contacts",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "67b2c677ee87d1001837658a"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"accept\": \"application/json\",\n  \"content-type\": \"application/json\",\n  \"Authorization\": \"Bearer 67b2c677ee87d1001837658a\"\n}\n",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"contact\": {\n    \"name\": \"Renan Porto\",\n    \"emails\": [\n      {\n        \"email\": \"fulano@email.com.br\"\n      }\n    ],\n    \"phones\": [\n      {\n        \"phone\": \"1111111111\",\n        \"type\": \"home\"\n      }\n    ],\n    \"contact_custom_fields\": [\n      {\n        \"custom_field_id\": \"67a4d30e3f69ce001b3dbe50\",\n        \"value\": \"Civic 2022\"\n      }\n    ]\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        160,
+        -160
+      ],
+      "id": "31698c1b-3f50-4c9f-a75d-c8f45a363615",
+      "name": "Criar contato no CRM"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Recebe o valor como entrada\nconst input = $('Dados').item.json.body.data.key.remoteJid;\n\n// Verifica se o valor está presente e é uma string\nif (input && typeof input === 'string') {\n  // Remove tudo após o \"@\" usando split e pega a primeira parte\n  const result = input.split('@')[0];\n\n  // Retorna o resultado\n  return {\n    output: result\n  };\n} else {\n  // Retorna uma mensagem de erro se o valor não for uma string\n  return {\n    error: ''\n  };\n}\n"
+      },
+      "id": "70408d7e-f6ae-467a-9685-0495c571a706",
+      "name": "Formata o Número",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1180,
+        60
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const currentDate = new Date();\n\n// Obter o dia, mês e ano\nconst day = currentDate.getDate();\nconst month = currentDate.getMonth() + 1; // Os meses começam do zero, então adicionamos 1\nconst year = currentDate.getFullYear();\n\n// Formatar a data no formato desejado (dia/mês/ano)\nconst formattedDate = `${day}/${month}/${year}`;\n\n// Obter a hora e o minuto\nconst hour = currentDate.getHours();\nconst minute = currentDate.getMinutes();\n\n// Formatar a hora no formato desejado (hora:minuto)\nconst formattedTime = `${hour}:${minute}`;\n\n// Retornar a data e a hora separadas\nreturn { \n    data: formattedDate,\n    hora: formattedTime\n};\n"
+      },
+      "id": "cfa47ae5-9927-43fb-8bd0-6ed6c20aa94b",
+      "name": "Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1020,
+        60
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const nomeCompleto = $('Dados').item.json.Nome;\n\n// Dividir o nome completo em nome e sobrenome\nconst partesNome = nomeCompleto.split(' ');\n\n// Determinar o nome e sobrenome\nconst nome = partesNome[0];\nconst sobrenome = partesNome.length > 1 ? partesNome.slice(1).join(' ') : '';\n\n// Criar o objeto de saída\nconst saida = {\n  nome: nome,\n  sobrenome: sobrenome\n};\n\n// Saída do resultado\nreturn saida;"
+      },
+      "id": "6a6dabda-9687-41f2-91d7-bd6192d6072a",
+      "name": "Nome e Sobrenome",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -860,
+        60
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "83d028f0-714a-4e5f-bbd0-81e3025eab00",
+              "leftValue": "={{ $('Dados').item.json.Id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5851070e-628e-48b3-8795-bbd7c6b5fd97",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Dados').item.json.Id }}/insights?&fields=account_name,campaign_name,adset_name,ad_name",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Dados').item.json.Token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f484dbb7-3ca7-4014-b903-5a9746534814",
+      "name": "Origem do Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -620,
+        60
+      ],
+      "retryOnFail": false,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "executeOnce": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "campo AD: {{ $json.data[0].ad_name }}",
+        "height": 80,
+        "width": 187.32394366197195
+      },
+      "id": "a20e677d-8487-4873-8ba8-c67e25ddb92d",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1620,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Token Global",
+        "height": 80,
+        "width": 150
+      },
+      "id": "6703044d-35d6-49c1-8942-e20eba0f66e0",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1400,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "Cliente",
+              "stringValue": "={{ $json.body.apikey }}"
+            },
+            {
+              "name": "Telefone",
+              "stringValue": "={{ $json.body.data.key.remoteJid }}"
+            },
+            {
+              "name": "Id",
+              "stringValue": "={{ $json.body.data.contextInfo.externalAdReply.sourceId }}"
+            },
+            {
+              "name": "Nome",
+              "stringValue": "={{ $json.body.data.pushName }}"
+            },
+            {
+              "name": "Token",
+              "stringValue": "EAAQNcul6hkMBO6DZA9SudR9b90vrdZBtfxI1MBZBI51OHHoa40CRKRWTpU6ZCfkdphND5459BWR04OI8lpO4ZBYPow36yTJL3lysnmZAiiORmGAsu5eRUl0Sc8OaU7Fo3AfFJfUkVVUOvBHNOlKAOZCKCZAZA5wHtxZBkEZClGObArmL6ZAm6ZB6j2LyZC9MeQUrw2NWHlVAZDZD"
+            },
+            {
+              "name": "Origem",
+              "stringValue": "={{ $json.body.data.contextInfo.conversionSource }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "283e641d-6055-4046-abec-c1b0887bc4af",
+      "name": "Dados",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        -1360,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "777a8fc5-5bcc-4c9e-b7f2-11a2d7825b7e",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1580,
+        60
+      ],
+      "id": "96c373c0-ebdf-498a-8391-046c6a73ba71",
+      "name": "Webhook",
+      "webhookId": "777a8fc5-5bcc-4c9e-b7f2-11a2d7825b7e"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-02-19T15:12:07.334Z",
+  "versionId": "a9eb5c5d-d78a-4244-8db1-ca39c158b895"
+}
