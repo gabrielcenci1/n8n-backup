@@ -1,0 +1,457 @@
+{
+  "active": false,
+  "connections": {
+    "Gatilho por Horário": {
+      "main": [
+        [
+          {
+            "node": "Buscar Dados no Meta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Dados no Meta": {
+      "main": [
+        [
+          {
+            "node": "Desmembrar Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Desmembrar Dados": {
+      "main": [
+        [
+          {
+            "node": "Script de Cálculo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Script de Cálculo": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evolution API": {
+      "main": [
+        []
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Evolution API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-03T23:38:17.446Z",
+  "id": "ZcY6BmqMSxr61UJy",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Template 01 - Coleta de Dados Facebook",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Adicione o ID da sua conta de anuncio no formato abaixo:\n\nact_{ACCOUNT_ID}\n\nExample:\nact_39865092752135\n\n## 👇",
+        "height": 228.80860793677647,
+        "width": 208.95674579497393,
+        "color": 7
+      },
+      "id": "0e4ef649-3ac2-4a0b-b0ab-124866b6fb6a",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Soma os valores para agrupar e enviar no relatório\n\n## 👇",
+        "height": 150.199452534768,
+        "width": 150,
+        "color": 7
+      },
+      "id": "1af78d67-c34a-47b6-8677-9ee3a3fff019",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        400,
+        80
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtHour": "={{ 7 }}",
+              "triggerAtMinute": "={{ 0 }}"
+            }
+          ]
+        }
+      },
+      "id": "24fc754c-f3c5-467a-b100-bd018919f548",
+      "name": "Gatilho por Horário",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -200,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "graphApiVersion": "v17.0",
+        "node": "act_630390435452543",
+        "edge": "insights",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "time_increment",
+                "value": "1"
+              },
+              {
+                "name": "level",
+                "value": "ad"
+              },
+              {
+                "name": "fields",
+                "value": "=campaign_id,\ncampaign_name,\nadset_id,\nadset_name,\nad_id,\nad_name,\nspend,\nimpressions,\nclicks,\ncpc,\ncpm,\ncpp,\nctr,\nobjective,\nreach,\nactions"
+              },
+              {
+                "name": "limit",
+                "value": "3000"
+              },
+              {
+                "name": "date_preset",
+                "value": "yesterday"
+              }
+            ]
+          }
+        }
+      },
+      "id": "f86ccb25-091c-4b01-97e1-1d3f942e5a10",
+      "name": "Buscar Dados no Meta",
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "position": [
+        0,
+        280
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "b555ArpVh4WxF5sQ",
+          "name": "Facebook Graph account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "id": "ef9fbe51-9baf-415c-bef9-165e03017c3f",
+      "name": "Desmembrar Dados",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        200,
+        280
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.z-api.io/instances/3D19D6632A91E0131C5872B70F2FFCF9/token/9E0E3819549F6CE8749D439E/send-text",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Client-Token",
+              "value": "F82c3469773774f0393e4284efadff40bS"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "phone",
+              "value": "5535997333909"
+            },
+            {
+              "name": "message",
+              "value": "=📊 *Relatório de campanha*\n\n🗓️ *Data:* {{ new Date(Date.now() - 86400000).toLocaleDateString('pt-BR') }}\n\n- *Total de Cliques:* {{ $json[\"totalClicks\"]  }}\n- *Custo Médio por Cliques:* R$ {{ $json[\"avgCPC\"]}}\n\n- *Valor Total Investido:* R${{ $json[\"totalSpend\"] }}\n\n- *Total de Leads:* {{ $json[\"totalLeads\"] }}\n- *Custo Médio por Leads:* R${{ $json[\"cpl\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0d8aed5b-803b-4df0-9e4a-c7e5823d48f5",
+      "name": "Envio por Whatsapp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        200,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "let totalSpend = 0;\nlet totalLeads = 0;\nlet sumCPM = 0;\nlet sumCPP = 0;\nlet sumCTR = 0;\nlet totalClicks = 0;\nlet countCPM = 0;\nlet countCPP = 0;\nlet countCTR = 0;\n\n// Função para converter string de valores para float, considerando tanto ponto quanto vírgula\nfunction convertToFloat(value) {\n    return parseFloat(value.replace(',', '.'));\n}\n\n// Itera sobre cada item (que representa um conjunto de dados da campanha)\nitems.forEach(item => {\n    const jsonData = item.json;\n\n    // Acumula o valor de spend\n    if (jsonData.spend !== undefined) {\n        totalSpend += convertToFloat(jsonData.spend);\n    }\n\n    // Acumula o valor dos clicks\n    if (jsonData.clicks !== undefined) {\n        totalClicks += parseInt(jsonData.clicks, 10);  // Certifique-se de que está convertendo clicks para inteiro\n    }\n\n    // Verifica se o campo 'actions' existe e é um array\n    if (Array.isArray(jsonData.actions)) {\n        jsonData.actions.forEach(action => {\n            if (action.action_type === 'onsite_conversion.messaging_conversation_started_7d') {\n                totalLeads += parseInt(action.value, 10);\n            }\n        });\n    }\n\n    // Acumula os valores de cpm, cpp, ctr para calcular a média\n    if (jsonData.cpm !== undefined) {\n        sumCPM += convertToFloat(jsonData.cpm);\n        countCPM++;\n    }\n    if (jsonData.cpp !== undefined) {\n        sumCPP += convertToFloat(jsonData.cpp);\n        countCPP++;\n    }\n    if (jsonData.ctr !== undefined && convertToFloat(jsonData.ctr) > 0) {\n        sumCTR += convertToFloat(jsonData.ctr);\n        countCTR++;\n    }\n});\n\n// Calcula as médias\nconst avgCPC = totalClicks > 0 ? (totalSpend / totalClicks) : 0;\nconst avgCPM = countCPM > 0 ? (sumCPM / countCPM) : 0;\nconst avgCPP = countCPP > 0 ? (sumCPP / countCPP) : 0;\nconst avgCTR = countCTR > 0 ? (sumCTR / countCTR) : 0;\nconst cpl = totalLeads > 0 ? (totalSpend / totalLeads) : 0;  // Calcula o CPL\n\n// Retorna apenas os dados acumulados\nreturn [\n    {\n        json: {\n            totalSpend: totalSpend.toFixed(2).replace('.', ','),\n            totalLeads: totalLeads,\n            totalClicks: totalClicks,  // Inclui o total de clicks no resultado\n            avgCPC: avgCPC.toFixed(2).replace('.', ','),\n            avgCPM: avgCPM.toFixed(2).replace('.', ','),\n            avgCPP: avgCPP.toFixed(2).replace('.', ','),\n            avgCTR: avgCTR.toFixed(2).replace('.', ','),\n            cpl: cpl.toFixed(2).replace('.', ',')\n        }\n    }\n];\n"
+      },
+      "id": "90f9005e-8122-4034-9861-3abb30f137c0",
+      "name": "Script de Cálculo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Gabrielcenci1",
+        "remoteJid": "5511947536892",
+        "messageText": "=Oi, segue relatorio de campanha da TROIA. {{ $json.totalSpend }}{{ $json.totalLeads }}{{ $json.totalClicks }}{{ $json.avgCPC }}{{ $json.avgCPM }}{{ $json.avgCPM }}{{ $json.avgCPP }}{{ $json.avgCTR }}{{ $json.cpl }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        140
+      ],
+      "id": "f647cbb9-77cb-4b08-8782-4646bd9b8808",
+      "name": "Evolution API",
+      "credentials": {
+        "evolutionApi": {
+          "id": "ZoYyvdjDxoM3K7Mh",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://leadtrack.moonconsultoriadigital.com.br/message/sendText/Gabrielcenci1",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "AB299FAD7252-4F95-BB89-52B168B01FD1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "5511945175155"
+            },
+            {
+              "name": "text",
+              "value": "teste mensagem"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        -80
+      ],
+      "id": "bca1c4ef-6ead-4104-ac3d-6284ac2fd325",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://leadtrack.moonconsultoriadigital.com.br/message/sendText/Gabrielcenci1",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "evolutionApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "AB299FAD7252-4F95-BB89-52B168B01FD1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "55119966964597"
+            },
+            {
+              "name": "text",
+              "value": "="
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -160,
+        500
+      ],
+      "id": "53aab0c8-c8b4-4b2f-bd23-4af5cb920af0",
+      "name": "HTTP Request1",
+      "credentials": {
+        "evolutionApi": {
+          "id": "ZoYyvdjDxoM3K7Mh",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        640,
+        180
+      ],
+      "id": "59ca99fa-3a7e-440f-8eeb-f478209fc46d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        520
+      ],
+      "id": "a1d22b1c-f22e-4afa-9a8f-3ba9ccc76a90",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.5,
+      "position": [
+        740,
+        540
+      ],
+      "id": "d962c5c3-012a-45ab-a47a-fdca722cad11",
+      "name": "Redis Chat Memory"
+    },
+    {
+      "parameters": {
+        "path": "b2451c40-ae45-48ba-a5ee-946c9e8b55fc",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -20
+      ],
+      "id": "09b14cc6-3091-414b-a628-53a20f5519c0",
+      "name": "Webhook",
+      "webhookId": "b2451c40-ae45-48ba-a5ee-946c9e8b55fc"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-08-03T04:04:39.725Z",
+      "updatedAt": "2025-08-03T04:04:39.725Z",
+      "id": "CbOxe6wvvWTMTcRN",
+      "name": "Flux Automate"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-05T21:32:07.906Z",
+  "versionId": "f35518a4-e251-45d5-befa-ee022c09ce31"
+}
