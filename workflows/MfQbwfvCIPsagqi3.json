@@ -1,0 +1,738 @@
+{
+  "active": false,
+  "connections": {
+    "Formata o Número": {
+      "main": [
+        [
+          {
+            "node": "Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data": {
+      "main": [
+        [
+          {
+            "node": "Nome e Sobrenome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nome e Sobrenome": {
+      "main": [
+        [
+          {
+            "node": "Origem do Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Origem do Lead": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dados": {
+      "main": [
+        [
+          {
+            "node": "Formata o Número",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Filtrar duplicado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar duplicado": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Criar contato no CRM1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-02-18T19:01:25.945Z",
+  "id": "MfQbwfvCIPsagqi3",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Cadastro RD Station - Casa dos Amortecedores",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Recebe o valor como entrada\nconst input = $('Dados').item.json.body.data.key.remoteJid;\n\n// Verifica se o valor está presente e é uma string\nif (input && typeof input === 'string') {\n  // Remove tudo após o \"@\" usando split e pega a primeira parte\n  const result = input.split('@')[0];\n\n  // Retorna o resultado\n  return {\n    output: result\n  };\n} else {\n  // Retorna uma mensagem de erro se o valor não for uma string\n  return {\n    error: ''\n  };\n}\n"
+      },
+      "id": "7fe0d7fc-f14a-4492-8841-3f2889dbbb7c",
+      "name": "Formata o Número",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1180,
+        60
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const currentDate = new Date();\n\n// Obter o dia, mês e ano\nconst day = currentDate.getDate();\nconst month = currentDate.getMonth() + 1; // Os meses começam do zero, então adicionamos 1\nconst year = currentDate.getFullYear();\n\n// Formatar a data no formato desejado (dia/mês/ano)\nconst formattedDate = `${day}/${month}/${year}`;\n\n// Obter a hora e o minuto\nconst hour = currentDate.getHours();\nconst minute = currentDate.getMinutes();\n\n// Formatar a hora no formato desejado (hora:minuto)\nconst formattedTime = `${hour}:${minute}`;\n\n// Retornar a data e a hora separadas\nreturn { \n    data: formattedDate,\n    hora: formattedTime\n};\n"
+      },
+      "id": "aebf669e-13e8-4133-835f-9bef4f3dc80d",
+      "name": "Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1020,
+        60
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const nomeCompleto = $('Dados').item.json.Nome;\n\n// Dividir o nome completo em nome e sobrenome\nconst partesNome = nomeCompleto.split(' ');\n\n// Determinar o nome e sobrenome\nconst nome = partesNome[0];\nconst sobrenome = partesNome.length > 1 ? partesNome.slice(1).join(' ') : '';\n\n// Criar o objeto de saída\nconst saida = {\n  nome: nome,\n  sobrenome: sobrenome\n};\n\n// Saída do resultado\nreturn saida;"
+      },
+      "id": "8f419f06-acf3-4d05-81db-0256ec2f3762",
+      "name": "Nome e Sobrenome",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -860,
+        60
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Dados').item.json.Id }}/insights?&fields=account_name,campaign_name,adset_name,ad_name",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Dados').item.json.Token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "61864588-c51d-43d0-9c2b-3072a7be1eb4",
+      "name": "Origem do Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -620,
+        60
+      ],
+      "retryOnFail": false,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "executeOnce": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "campo AD: {{ $json.data[0].ad_name }}",
+        "height": 80,
+        "width": 187.32394366197195
+      },
+      "id": "5a03ee22-14db-448c-8f4b-4e7c55323c73",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1620,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Token Global",
+        "height": 80,
+        "width": 150
+      },
+      "id": "0374769e-7ff1-40c2-9ddb-d364d1c2860a",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1400,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "Cliente",
+              "stringValue": "={{ $json.body.apikey }}"
+            },
+            {
+              "name": "Telefone",
+              "stringValue": "={{ $json.body.data.key.remoteJid }}"
+            },
+            {
+              "name": "Id",
+              "stringValue": "={{ $json.body.data.contextInfo.externalAdReply.sourceId }}"
+            },
+            {
+              "name": "Nome",
+              "stringValue": "={{ $json.body.data.pushName }}"
+            },
+            {
+              "name": "Token",
+              "stringValue": "EAAQNcul6hkMBO6DZA9SudR9b90vrdZBtfxI1MBZBI51OHHoa40CRKRWTpU6ZCfkdphND5459BWR04OI8lpO4ZBYPow36yTJL3lysnmZAiiORmGAsu5eRUl0Sc8OaU7Fo3AfFJfUkVVUOvBHNOlKAOZCKCZAZA5wHtxZBkEZClGObArmL6ZAm6ZB6j2LyZC9MeQUrw2NWHlVAZDZD"
+            },
+            {
+              "name": "Origem",
+              "stringValue": "={{ $json.body.data.contextInfo.conversionSource }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "36cf0237-3312-47f4-97a0-663e6c2a2ec2",
+      "name": "Dados",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        -1360,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1Y2b1gDExS-mWEZdUASuczu1bucC5-s2DSqhYY1QMc3E/edit?gid=1498555570#gid=1498555570",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1498555570,
+          "mode": "list",
+          "cachedResultName": "Casa dos Amortecedores",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y2b1gDExS-mWEZdUASuczu1bucC5-s2DSqhYY1QMc3E/edit#gid=1498555570"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Data de Entrada": "={{ $('Data').item.json.data }}",
+            "Horario": "={{ $('Data').item.json.hora }}",
+            "Nome e Sobrenome": "={{ $('Nome e Sobrenome').item.json.nome }}",
+            "Telefone": "={{ $('Formata o Número').item.json.output }}",
+            "Campanha": "={{ $('Origem do Lead').item.json.data[0].campaign_name }}",
+            "Conjunto": "={{ $('Origem do Lead').item.json.data[0].adset_name }}",
+            "Anuncio": "={{ $('Origem do Lead').item.json.data[0].ad_name }}",
+            "Mensagem ": "={{ $('Dados').item.json.body.data.contextInfo.externalAdReply.body }}",
+            "Link Criativo": "={{ $('Dados').item.json.body.data.contextInfo.externalAdReply.sourceUrl }}",
+            "Dispositivo": "={{ $('Dados').item.json.body.data.source }}",
+            "Plataforma URL": "={{ $('Dados').item.json.body.data.contextInfo.externalAdReply.thumbnailUrl }}",
+            "Conta": "={{ $('Origem do Lead').item.json.data[0].account_name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Conta",
+              "displayName": "Conta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Data de Entrada",
+              "displayName": "Data de Entrada",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Horario",
+              "displayName": "Horario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nome e Sobrenome",
+              "displayName": "Nome e Sobrenome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Telefone",
+              "displayName": "Telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Campanha",
+              "displayName": "Campanha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Conjunto",
+              "displayName": "Conjunto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Anuncio",
+              "displayName": "Anuncio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensagem ",
+              "displayName": "Mensagem ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Link Criativo",
+              "displayName": "Link Criativo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Dispositivo",
+              "displayName": "Dispositivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Plataforma URL",
+              "displayName": "Plataforma URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "ff2a7853-532a-4881-a7ec-78b1af3121c0",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        80
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hgJLwvNG8U3wIlYt",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "83d028f0-714a-4e5f-bbd0-81e3025eab00",
+              "leftValue": "={{ $('Dados').item.json.Id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "de5ac3ca-f25c-4d46-96ae-156887f8cb70",
+              "leftValue": "={{ $('Webhook').item.json.body.data.contextInfo.conversionSource }}",
+              "rightValue": "google",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "a5bb79ef-af48-4e90-b078-20d42ab16fec",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -340,
+        60
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "8db5b29c-f88d-4cfd-9e90-a7956047fad9",
+      "name": "No Operation, do nothing",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        0,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1Y2b1gDExS-mWEZdUASuczu1bucC5-s2DSqhYY1QMc3E/edit?gid=1498555570#gid=1498555570",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1498555570,
+          "mode": "list",
+          "cachedResultName": "Casa dos Amortecedores",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y2b1gDExS-mWEZdUASuczu1bucC5-s2DSqhYY1QMc3E/edit#gid=1498555570"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Telefone",
+              "lookupValue": "={{ $('Formata o Número').item.json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -100,
+        60
+      ],
+      "id": "34ed7d80-76b4-47f3-85d5-dc3e6bc5bf32",
+      "name": "Filtrar duplicado",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hgJLwvNG8U3wIlYt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "de5ac3ca-f25c-4d46-96ae-156887f8cb70",
+              "leftValue": "={{ $('Formata o Número').item.json.output.toNumber() }}",
+              "rightValue": "={{ $json.Telefone }}",
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "f3dc5aae-fe4e-4264-950f-d1e4dca3627e",
+              "leftValue": "={{ $('Data').item.json.data }}",
+              "rightValue": "={{ $json.Data }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "32d16f66-63c1-4329-be78-5edc43750703",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        80,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "casa-dos-amortecedores",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1580,
+        60
+      ],
+      "id": "24fbcaeb-55a3-4dfe-9b19-b76cc38b062c",
+      "name": "Webhook",
+      "webhookId": "17c1736a-4b75-443c-bd3f-65bba52b543c"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://crm.rdstation.com/api/v1/contacts",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "67b2c677ee87d1001837658a"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"accept\": \"application/json\",\n  \"content-type\": \"application/json\",\n  \"Authorization\": \"Bearer 67b2c677ee87d1001837658a\"\n}\n",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contact\": {\n    \"name\": \"{{ $('Nome e Sobrenome').item.json.nome }}\",\n    \"phones\": [\n      {\n        \"phone\": \"{{ $('Formata o Número').item.json.output }}\",\n        \"type\": \"home\"\n      }\n    ],\n    \"contact_custom_fields\": [\n      {\n        \"custom_field_id\": \"67a4d30e3f69ce001b3dbe50\",\n        \"value\": \"0\"\n      }\n    ]\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        80
+      ],
+      "id": "2fa077ed-cd48-4075-ba89-35c9e617122d",
+      "name": "Criar contato no CRM1",
+      "executeOnce": true,
+      "retryOnFail": true
+    }
+  ],
+  "pinData": {
+    "Formata o Número": [
+      {
+        "json": {
+          "output": "554497051789"
+        }
+      }
+    ],
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "automacao.moonconsultoriadigital.com.br",
+            "user-agent": "axios/1.7.9",
+            "content-length": "11221",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.1",
+            "x-forwarded-host": "automacao.moonconsultoriadigital.com.br",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "51f8199c17b1",
+            "x-real-ip": "172.18.0.1"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "event": "messages.upsert",
+            "instance": "casa dos amortecedores",
+            "data": {
+              "key": {
+                "remoteJid": "5511954364527@s.whatsapp.net",
+                "fromMe": false,
+                "id": "D6BC13674895F2192B0DEE3707A322A6"
+              },
+              "pushName": "Roberto",
+              "status": "DELIVERY_ACK",
+              "message": {
+                "messageContextInfo": {
+                  "deviceListMetadata": {
+                    "recipientKeyHash": "kqMKq3fgawKfaA==",
+                    "recipientTimestamp": "1740503104"
+                  },
+                  "deviceListMetadataVersion": 2,
+                  "messageSecret": "RQmia2VrORQnN7+v3fxxRCwBxiaZwAVF7BqQEXQyesA="
+                },
+                "conversation": "Olá! Tenho interesse e queria mais informações, por favor.plator e disco de embreagem do del ReY ano 83"
+              },
+              "contextInfo": {
+                "conversionSource": "FB_Ads",
+                "conversionData": "QVJDRF92bnQ4alM5aW1XMTFPUlpBcXI4Tkxac0dSMjljMGJ5ajNLYklVQmVxUzFlU3l3WlRGb1RDbzc1Q21BMTJrb0NTdHJVcHJ1aUgyb2NXYmgxS2dzOFFPTXQtSFN4TTI5NVk5TV8tbFl1Slp2MFMzZHRLLXBhZ1RvZVEwYnZDMnhyWVVVS01DTDJ6TnBTT0NuVjMyejcyOUlXakdJVWJpNldXeHI2QkVUc1V0b25EZzdqUTN4SllSRkVRMG5Db2w4RzNLdUs0a05hb0FRWjdfN1U4NEhOajFQX0tWeXBzbmJ0Wk00ZUxjcll1UmtXOWZfenh6dlYwd21QMVZFUldtN0g5bmgyTkxFTjVaZy1jY0tNcGJQSGpkc3k0WFFyRm1KWmFFRDRySXlyWFRWRHBCbGJnZjc0NWVtQVFSbFdXLVZw",
+                "conversionDelaySeconds": 68,
+                "expiration": 7776000,
+                "ephemeralSettingTimestamp": "1724499081",
+                "externalAdReply": {
+                  "title": "Converse conosco",
+                  "body": "💸 Manutenção de embreagem e com qualidade sem gastar muito? A partir de R$249,00\n\n🎯 Precisão e confiança com 1 anos de garantia .\n🔖 Flexibilidade no pagamento? Sim! Parcele em até 12x SEM JUROS.\n\nComprou Ganhou!!!\n✅ Balanceamento Grátis\n✅ Alinhamento Grátis\n✅ Montagem Grátis\n \n📱 Clique para mais informações! 📲",
+                  "mediaType": "IMAGE",
+                  "thumbnailUrl": "https://scontent.xx.fbcdn.net/v/t45.1600-4/451152445_120210625743150132_6969849255457553168_n.png?stp=c3.3.300.300a_dst-png_p306x306&_nc_cat=100&ccb=1-7&_nc_sid=e37a05&_nc_ohc=W-Uypn2y-JwQ7kNvgEgub8b&_nc_oc=AdhSUkB2-STBANAfFoqIPHosRfb08xjbY4CB2G9p28RAyJduSktZeaqonvDrpawMxd7xBlA0ZjCpWnb0Ug6qNT13&_nc_ad=z-m&_nc_cid=0&_nc_zt=1&_nc_ht=scontent.xx&_nc_gid=AuqCCRLqdMyoylX4u2Hrn23&oh=00_AYCbg6QDL_WMEhXNkeIGqeuCxLOiGd8-ObZNwwd7jhkukQ&oe=67C57B21",
+                  "thumbnail": "iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAAXNSR0IB2cksfwAAF81JREFUWIVtmGmUHNWV5+9978WWe2ZV1qqsRVVClJAoUVoKsYjNGASGxmDAbc4YGnvwYPfBTPdM9+DjcXuh7QO4cWPc+LTX9gLN8TQYBoxYZMBu0GCQ0IKQVKpFtVdWVW6RkZGxvWU+lOQZz5n4EPFORLxzfu/ed9+994+dQ/9RSg6AAKCUYFqc6mbg12x3NWm2YcuFGtEiIbgUUWMcIUqzjBDnFC4YbFbHVyc/IFCVKgRAUIAUuR8EdYeZccIYKAAAQACllAIjkaSaFiq4Us1/jC5WQzkzNxlFIaVUqbVf/8/FOJcABEApJZgeRy3me1VSPb4LyhOE7lx+ejkM0lTP0CgCvx7IA+kvbRi9uFF+tzh2jLIKFz4AKoWEkqjp+7bDrDgQJoT8IxSAMuIpZLqQkoJ6GQog1A3GMvYMTM/+/8kYEg0AQAlmJKgWE37F9Sv9gf0L//REsPDDyLw7bMRkWNP0W0Hdgz2FK7f5tRPF4+8wVhMyBKAAilAigjBwGpqVJJqulARkAAqVUgBGIsMMUymBQAFkHOQr0AMR3KAXoWdwenaCRyH5UzJCiI6EaVZGMzM8aISNoma0kcRgSygub/pjqUENrDHW/j+0vlk/2n/jU8ybWzz2CtVKUgYIAKAIITIM/XqTGWmqmaDkmk8JIhJqJLKaEQOlEBARAYgCjKN4GXteiDqyOu3rGWSaLoVAxD9i0WT7pZqZpkacB3bgLFItZeR2xNw5vfbhV4V+u7+4yL15o7WM6baw+EZmZHX8mIQVihBGIoykZliRH9mrDUlTuhVTCjknjBJCNC9QaCSsRDaMIIyUAqaAUUoQaCSISdRJzAophjXXTGTrDVtwTgg5g5XtuZ4aFvftsFEkLGmkNmnI6uC+155yN27/nZ44kOw4lLwBRq75remBvbyu043pjUp5pSMnC53WytISeOX+/lRPIVavuwSaLSnH8cxmw94yZA6sT1dWF3KJRncbpapC+LIX6FK4GWM54LpO2EnMCCmGteb/Q0Zb+m/ifj1sLBEWNxODBFUYRtl49bfPfX3z+rzvVb//+IN2c7Ulbf/wW59vyTa+8NmP33T9hRgufOm//sXIlq49V20eHIj9/dc+X+gQr7zy+v2fv+6fH7//scd/8hd37PzqA7e2pgKndORffvC1/m4aOJM/+f6X337rzW2b8z987N4nfrxXs9o0GZ7EnBBiWG+aiUy9UV8jYyJ0w2aZsLgW6wJQUkRSEpB+LJ6eXVg9cvgI1RJf++tbGk5DAE0m2/wIeRSt6+mLxbPBYqmja93C4jJhsYOHTsUtddut1/khvefOi277xEe/88Rzx48duOySrYaVmVsof3h80oi1/eh7X9J0IwgCSjUAVEhiSryCvcD/JAJoLLsDgWpWGxKUIiCooqBq4MInbtheK1eUCuNx87XXfnvsg6My8ut2qa/Q6Tq1hmPHTEapnBg7OXlqbHR02KmWr9g9zKPo1Zd/e9UVO3/19NN3f/qWW27es7QwW+hsa3oOY4oAf+W11w4fOmTo8sV948iygAKQ6CBOQub/thm2b7xXixUQQQoOADKqShUp7qTN+sAFQ3MnZj23ulLmDQGtrVKGkGtrCfxgbmK1vTtZXw0yXVnXtduznaApISO7opcdubEHJ5bs3p5MSo9NnF5Otmj92daqXQvDoFiSlKj2VuKEXURLgYoAFIBEkK4i16rZG7RiJeA03XUNoUyIAEFJ3pAqQtSlTGfO27a8qq0WQWAO4u27YPYOb9r2wpHa4mh9MY7uOY366eTILfbBPap2cDW6vDZxQXXmA2l+2RzfvxrdyZYvrE4frmq9lO9ZPfrrYJjQvgDyyUzBiHW6vIVpBoJYyy5rdx3kCUxLIYY1l6a7r5XCB5BK+go4QU0EWBgpiKZfmZzTDcUYbXhL/zz34jNgFhpT10WNWSm+6S7YUpRk5d7G2OFIPtY8mRHNn9DERc3Jf2gselFxe2VhRYa3Nk5s8ebuC0v7rNRqcsBUvhRcAadErh2eZ48qtcZ2hkxJmshfBABSCgCFROMBL4z0Ba5cObWoWQQUgFKcGLXGzO64OCx0gtCq4S98vsVUtnKqgvQY+A8qHyPRelN2uvaTNJOL3AAVicffa/oS6V5MpN35Iy07LWRnWchZGgQ8m5ABAEFDOQFJ7Nz8JURc+84DXhhZFzTEyvgKM5USHEApySmzap5DVydUul/JgAnf19NmWEPUQ8LiGomy56E7b0aOT7XQaGVhmckIgERUByU4i8eCkpHoAUClJIACVKD4mTFIODtQoBAEKIldW/47oIaIkR8VRtaFDVgZX9JMUNJXSkqpKNN5KKK6TawcoxQQFVAilSRUKWVYcaLHUHhAdYUEFRDFJRKlFKIEKZVSqIRAIoWHa8Y/AyFASQCpQAKoP5IBCFCKIY2BIjyICiPrQ5eWp1Z0S/cDV0lBidJ1KwqjwLE1K4UUpZIIACAlEKWkZiaBUhl5XFLFhZT8zC5RnFLChdCYIigAFKgIkYCScMaJChQAIig8W2UggDr7RjHEGA/Dwkhv2NQq06scpYiwvS1jaNBoQnGxTLitx9KEGlIqQHJ2N6BmJAnTQYFCaEl5GpOmLhhFykAptOthOskWVpUXWgQFwNpOUUqqtUIIgBCUSKgCVFKqMws682CSs8JIV9Cg1ZlSqNTQYP6ybcKCxYZTM+O5sZmO37xJqKaBQk2jAERKkEppZpIQTSmFhCnhn1so8tAtrGsJIzEzM93R3rlCvZHNLXvfihp+gmlCKtZohkopRolpKABFCHObYRB4AMo0NctEwaOztgTc+ekXfAdqM1VPNHduyVyzfe7we2/qRjKKojDw+voKM/Xtz706RxEiTgBQYzSeTFDNUBIUIKUEQIVh4LgSxcrocKyrPe664fsfOotlq7UluRZOilc2DTBKaa3mTC3pum7Va6vD5xpDG1rDMDp6vHhqJkylk0pGlEmQkvl1ozZf5wAb+nI7N058ePiQ7ShTRMl4LOLy+ImJrdtaNg/1M4wG+9MaY1Pz/Nh4HYSkVEPARlMpBZTFRza53/nqn1+wdfOaK4pLc5/761/tP6oyKX2puPqVv1z/N3/1SRm5f/apr08sJptu9e/uH77v3pspiwGA26h989tPfu/nHyaT6WqtASCpmb6dME5Q3bjbmR9/w21CLG4CiL7O7MT8imEYoed84qadt9442J2vd7d5I5twcH3b4bFQShlxdf1l8T2748Xi8sgG9zN37qlU7N/9/q22to6W1vzQQPypZ494YWzHpubjD99Nmfmd7z3502cqupm5cDN+95G/JET78U+ffu/A4V27dl51+Y4333x7pcLvuOmc4XMzRNOJ5wWbN5ph/WjkCSSq6bvO6uKpI++3mzx0bSOec+pLJ06cKC7Xsy1dsVh6eLBx7aUZP0BKSNNZcqpj6ZT5k+fgoo/87c3/4eE9t/7LxMQpIWQsZlCCVK0++rU/0434yRPHHnx0bzweazqloQ15KUGK6Ps/3ff4D1+RIlQKr//oSHvaidESDwMmZYAoz+njQcnuXNdZK5d812/6Yf+m/lLNGehd1z2wsVyudnV17d59yeLi4tjp05VKafu56z84lZucrr5+IBFFhmXpnevWz9X7FseW7vvC5s3nDVFKfrN3/+J8/bG/H91y/vmlcvmhbz/x61/+TTxmfPGBJ1/ad/ThBwMA46VnHtI1DYiGqNZ1pj8cK03Omyy+kUShl8uQ7lZvcWl1tWzzKBwbn4mbrA7Wsu1zPZNKpwHU6OjogQMH9u7dOzc3u7i0fPjg2x+5kCIxkolUNps3jISSzLbrX/x05rFv3qYb1r898/wDDx396FWFe+66Jgy5XatfcvHFl126c/u24Qfu32NpwR13/d3JE8dNnczMnA6CQCmoVMrIOjp6duVybSQIm4UuKx3nSgin0Tw+uWSYeiqdOD0+WSrXDx76cGW5ODy8dWxsbGFh4fLLL29tbR0d3ek2OfhHB/vSTY9LKRCZU7fv/XPj0W99WqL11lu/e/Dbz3R1Zi7bETOtpK6zgYH+z9x9B+c8CMKPXXfFFZdf+OuXJz5515eHL7z9+RdeYZQh4tvvno5lNwmhhNCYlJDP4fz8DCUUEatVp68z2dVdYEkRFGuH3z+AeJ2UcmxsrF6vr6ysjI9PHDx4MJ3J1u2lno4tJyZInKLd4JeOBA99/QsAQBBGRy85tH93o176/H1feeRRQRDCMOrv6/rk7TczBs89/5vXXt33wtN/u/2CoXKltr5/HQC88fqre39fS2f6paRI40zxsl0qLwULSoGlkUzK1EHNTM3UMa6k2L17d29v7/j4eGtraz6fP3DggOPUjh79YNv2na3ZXJI0KWUAUkmls3BpYUoIRSgSREQS+I0DJ2O/2jdr6rzeiC7fMX7ZJVsR8YkfvTa3TPMZnoxjOt25vDT9wm/eePC771JrBAGQGIQYLGzOIOlt2NUgEgYJUHKudG7Eulo6Tk0vtLW1LS0thWGYTqdPnRpvy7cObx2VioyPn8qkzrNykhAihEzEtf2Hw0uuf0wAIxApIGcSDevr6GkDFWU7YHJxavSab6ACQfM0sfHKW57obtcJlTUbSo18Onu+rusKNEIsQINRZghJdY2mEpaGKpFIRFEAXOXzbc1Ibd+xY35uTkr5/vvvaxrdeO7wr14q57Odp6cmlJSIqBQHlCB91Hsi3m6Ims9STNRQCY1IAVT3pgF4yCMFmpBdCsCSEUEPYl3Li+WYkCTb355PRKApxSjTldSIRhllWLWjwrqMqbv1RiCpIX03ziCIxOzs/OmpqSAILMtaXCpu3jTgeImp+dX2c4JYLJFva1uoS8Ej0IkCBRAZsrpr9gcxM7Pdfkcnugvi32PDveHidr/4srGeM9obzbdJQiFqoBGTgU7IlGJmyetg+j/2/zcneT7hlJrQvlExXSMLy86Ooa6TR15Hordk05mubBAGURgSSmZnZ03TbG9vL6zrnp1bvKB908ev7Tuy/yVAjMVS86cUAgc4IzeEWvqd1msN6R3RB1wgFpENPX/cK+2zGp6WUEhORmUPTSL9MAx13eJGzAGalNIkekjiIIFopHPIWBlfYoqwer25Uutoz+dXV8qopNLjC2W3QzM2DQ1NjI9ncznXdXVdLxZL4yf+wLk/M7uwa9dOK9E+XwwYU1KKM/WIQj+71Sc4h4bhOwIwCP0o0a8oZSAoSKCoARfNOiHUTOZQhgSwTJLAEpSDRkXX5tjSiXnf9lkXc0/rsf91cOnWay6I/LcbXshrTuDUV4pzghiO4+iGYdt2s9m0LHNicmpmZnZwcMPm886dX6WlshuLm2eLJSQguZLNiFwZHPwUOxIALdJYRRirob6srLI0bdDKXuChTjIdTa8OhFBqMiIo96hhdm9JLB+f9Wyf6YCPXH3zv1bWnXJIR7x59SUdhlxx6lVAWhg4HyH4wzvvGKaZyWR6e3sBYHp6Op3OcM43n7fxX/fyE6dpzNKllICMgAyBxkLnbn/ftdFRXrMl54ZlQMxCTVOGxXXLU7TOSV3PlDldDekKpEqQqkDKJunkcO/0jO+6Ks58IUN8/NqPBwKeqvSM15UelTasz2VSWr0hSjX1mds3njj2h9VSNZVK5vP5XC5n23Ymk0sl2MS89fReL5HMShEi0UH4q8u/7yXhd3JlfVt/pcGjV1/V7VoAkAIgAARAByAA1DJYzNQMAzVKTVNpeqRIpJuullhZqP/CGD2U3WSEZXr1wCaDwJBZX5RZm2RLK/b0fLNSx5rDurpybVl/amoumUpKIZVShKChq3I98W+vVmVYUtJjVhtKr7i07yIrcY11cnV8knd33/jsM78Pgv4HHui/776pxUV3eBh13S4Ww5YWUXdCL6g7Lrcb9XItXCkHq2VZrZDy0nmdeq3RfMvoM2STEIBIoUnVp3IzPUbIUoWWfE8i3ZnJtrz0+nQI3Z+87Sa3UXccu1pZjidy86X0U/9zVkAcIeBhLWrO1xdeIKkt29OJXUhDlW05/J4XhplnnnntrrvSHR3r77xTtrWd/+yz/S++GD3ySEnX+eho8f77D23Z4lx00Uw264JqBkHT9RohLFktSnpIkK112qFCk6o7WmZ/We6Zi5IxEiEyAfrPnzl5+a6evsERnQogxhvveu8dmWlt69E10w/jijea1SOxlh1mou/fnfC2uHZFNO1edTfR9SYhn/vBDxbm5g7de6/huoP/9E9usVi9/fbNYXioszOzZ885V19dsu1qqdRXLC43m/DkUwxgUZqMaaCQXjtwLiAiAAc0iNpk1meCWFkYOgrCdEKtYyeXJmfqk7PewQ9qSyWaay0AYUopyuKExsz0ENGSTLhTHo2H9miyebJiv/v+QbJjR+8NNziuO9toXPHoo+UgMJSKnniinMlMbN26cuJEUKnMTk5aQWDt2JE57zzx858lc7ln5WAt1q6ai/jdPZ+Qck0VBgmgo/IF/rLcOxclYkQpYIRgGHqcB5pmaXpCyrUeDAAIIFubyJt2KLjVtH+cPxg/fbxYb0QAFQC9f32zp5AaGFh86aWtP/vZ0sMPlyqVlm98o7x/v9XRYQkx+957cmnJt6xL97+d6+q5V167SjzZmMGvnD+aL/SKKFrrhP6ULBkjUiqKSICgUn8UDBAA1Fq7CBi4dckDBmBT6zr7wDcKc4JL5TjCcZtV2xeyCWACzAMwynhnR9005fCwzOehUCCIZiYj29pSD30zWxKfxW0Bn9f0dvxcPNcxMJgv9PEoWmvR1sg8gb8s986HyRgVShFAXJM0/ihlrC0jdOs8CNdEYkQlADf6i+uhvCEh+mO8gwYZFRgikn5TOq5vO2HTFwA+QADgAKhYrJ5I+Bs3bltemOL5/0J2mlDT4h14T7pN8Khj4Jx8T18UhgrXWnHUUPqCPFnuOR0mdQQFFPFP7ASgAqcqohCRrp3yCtAgEIbNCJQVN3Rup2XQDX4vDfpJNJjCdZqfCB1TcuQRdxuR0wxsRwrRBOjqKzyPPf+Y2pNPtPreLMsCoKaFE2MAqqenl0bRmpCgFDLC/6plZq/d2ZQaIwSR4FlhhSCEvidNH01YixghpUbIrBtMgMpnElw4Uid1kqhi9n1uaWbr+qEN/rG5tHOqIOf6mTeQIN0pJ1cILOAZgFTkLtVMLdmKIBAybBMIFfFQ1/yTx/JNp9LZ0UtokhDOhaFpGo92aatU07mSYRAiIQSBASIioTJMIOq6iiIJoJkmkbzOyWdWCzNCmAoVoKakxkkq3tK3Y7R4qmZLuZJIH4sYYV06aClRb4v8dm98vVjOefQPPRdbMvDdigTEn+px97JLF3duG+zrq09MsnXd7vKKlUzyVCKx/93ebG5m46A4fJS3t+U2DXmNhl+zTQCU0qCUtGSrvo9SWpSVKxVO6UDoNV468MVSh4kSEJWK6/G+3u1XrJxy3fI7oOYlr+tmL6FxIEppsWZzqeHMES1hZXtiiMqtC6mQSDy8bdebklc2Dxma1vS8HNMWZ6a7srmoq7OrageURC05EYae24wnElLKMAqTsXgkhB+GiKiZVtNtZJVqLBWtfB4N82PTU9+qtf7IjufQoomNfaM3rJyCxsqLSo0L3tDMPsLiiAqpGTVOB84ppmes9DpEEvpNKQGQACocv+bGRml1X2lFX1gIz9kQTUxmrv5IW8SNdDpsNNZ5QbElKwFkzGo6DrEscJwE00AIXdOqiYTnB0mCnFGdaVyKnuJKt5Aewh2L62fNLZsuvH553KgvPa/kh0K4mtVHWQqAExYLnYmm/SHVs1a6C5FGvqvk2XhTit6U69TjsdNX7rZtu/U/37dSLvf/p3tme7qDoXOX2/OlTMrdfclyd6dx8a7jTdcf2lhc14Vbz18odDubh+T5m6fjVmzX6DwPl+KWc+5GreG2r1ZjOg4aeGTTZ6vTrF58VqmTgjf1+ADVkoCSMCuoj3n2B1RPGqlORIyaVSUjUEKpSElOjRi+NHKpQUhKQ4bw5tQEhKHPKDKNN5z29eu7O7uxXvcIkiA0MmnBOWGMer5PUHm+Mg3GtMhtWJpmKPAtq1OINNMCCS2a/93gY4+vmgl1Mop8Pd5PtBQAJ9QInVNu9QjT03qiC5Fw31FSnpEIAZiZ1MzU/wb+nmtdulXR3QAAAABJRU5ErkJggg==",
+                  "sourceType": "ad",
+                  "sourceId": "120217114857930132",
+                  "sourceUrl": "https://fb.me/8b7NOou5O",
+                  "containsAutoReply": false,
+                  "renderLargerThumbnail": true,
+                  "showAdAttribution": true,
+                  "ctwaClid": "ARD7AL_x_zbdCYndJVASjYdb5GTFb2fCbr2kswxSC3GSACUIVLYGc26k_LgwLAzWKQcJGqGkT2kDR581R_QUOM0hJLQlw7sdTzDDBBPmR7AJ8f0DYjeLsRu5x3LctoJ1ewNPQkobSA"
+                },
+                "disappearingMode": {
+                  "initiator": "INITIATED_BY_ME",
+                  "trigger": "ACCOUNT_SETTING",
+                  "initiatedByMe": true
+                },
+                "trustBannerAction": 4294967295
+              },
+              "messageType": "conversation",
+              "messageTimestamp": 1740611484,
+              "instanceId": "8c1e0a74-b7f0-421a-8652-02b204f6496e",
+              "source": "android",
+              "chatwootMessageId": 77639,
+              "chatwootInboxId": 13,
+              "chatwootConversationId": 1797
+            },
+            "destination": "https://automacao.moonconsultoriadigital.com.br/webhook/casa-dos-amortecedores",
+            "date_time": "2025-02-26T20:11:26.653Z",
+            "sender": "5511913034381@s.whatsapp.net",
+            "server_url": "https://leadtrack.moonconsultoriadigital.com.br",
+            "apikey": "C9545E43C7DB-46C0-AEA8-297233C9E5C4"
+          },
+          "webhookUrl": "https://automacao.moonconsultoriadigital.com.br/webhook/casa-dos-amortecedores",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-02-18T19:01:18.929Z",
+      "updatedAt": "2025-02-18T19:01:18.929Z",
+      "id": "tGTguGrfT3S5Sa9w",
+      "name": "Ecossistema Kosmocar"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-08-03T04:31:09.434Z",
+  "versionId": "b350d62f-813c-4482-a9e2-034613696725"
+}
