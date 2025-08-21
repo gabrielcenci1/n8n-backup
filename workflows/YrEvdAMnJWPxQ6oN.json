@@ -1,0 +1,623 @@
+{
+  "active": false,
+  "connections": {
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "SendGrid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SendGrid": {
+      "main": [
+        [
+          {
+            "node": "Envia imagem com texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Envia imagem com texto1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Envia imagem com texto2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envia imagem com texto": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-03-15T23:04:28.711Z",
+  "id": "YrEvdAMnJWPxQ6oN",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "O ultimo video - Hotmart",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "fba99e45-b409-4fce-b347-cec900eb2702",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        500,
+        -480
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "29d3d7b3-5d05-4303-ab03-2b848e5be7e6",
+      "name": "Replace Me",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        -460
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "Email",
+        "include": "selectedOtherFields",
+        "fieldsToInclude": "Email",
+        "options": {}
+      },
+      "id": "3621433f-ba0b-4a7d-89bf-b03c377089d2",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        740,
+        -480
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "id": "2f02ac7b-ebf6-46b4-8080-46cff0573a8b",
+      "name": "Wait1",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1380,
+        -460
+      ],
+      "webhookId": "6712f93a-38ad-48da-8d80-cc84e88d87ba"
+    },
+    {
+      "parameters": {
+        "resource": "mail",
+        "fromEmail": "suporte@escolaechad.com.br",
+        "fromName": "Escola Echad",
+        "toEmail": "={{ $json.Email }}",
+        "subject": "🔒 Confirme Sua Inscrição no Workshop \"O Seu Último Vídeo\"",
+        "contentValue": "=Fala {{ $('Loop Over Items').item.json.Nome }}, tudo bem? Professor Fernando aqui.\n\nParabéns por dar o primeiro passo rumo à sua liberdade! Sua inscrição no Workshop \"O Seu Último Vídeo\" está quase 100% confirmada. Mas atenção:\n\n✅ Para garantir totalmente sua vaga e receber todas as informações importantes (link de acesso, atualizações e avisos), é ESSENCIAL que você entre no nosso grupo oficial do WhatsApp.\n\n👉 Clique aqui para entrar no grupo: https://chat.whatsapp.com/By3a2NNcLkoDqKUmcC8yC9\n\n🚨 E mais um pedido importante:\n\nEstou comprometidos em entregar a melhor experiência e conteúdo para você, e por isso, preciso conhecer melhor suas necessidades pessoais.\n\nResponda a nossa pesquisa rápida (leva menos de 2 minutos) e nos ajude a criar um workshop ainda mais direcionado para você.\n\n👉 Clique aqui para responder: https://forms.gle/BWL9id6QBaxGmUmk6\n\nSe tiver qualquer dúvida, é só responder esse e-mail. Estamos juntos nessa jornada!\n\nForte abraço,\nProfessor Fernando",
+        "additionalFields": {}
+      },
+      "id": "d971990b-596e-44fd-ad4e-7b73e39226d1",
+      "name": "SendGrid",
+      "type": "n8n-nodes-base.sendGrid",
+      "typeVersion": 1,
+      "position": [
+        960,
+        -460
+      ],
+      "credentials": {
+        "sendGridApi": {
+          "id": "CysSreC271NCw0Fi",
+          "name": "SendGrid account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1vGzPrcQ6CVWoIebnx5I9PbrmAvKhLKbrrvxOsCBm4yA/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1vGzPrcQ6CVWoIebnx5I9PbrmAvKhLKbrrvxOsCBm4yA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nome": "={{ $json.body.data.buyer.name }}",
+            "Sobrenome": "={{ $json.body.data.buyer.last_name }}",
+            "Telefone": "={{ $json.body.data.buyer.checkout_phone }}",
+            "Email": "={{ $json.body.data.buyer.email }}",
+            "Pais": "={{ $json.body.data.buyer.address.country }}",
+            "Produto": "={{ $json.body.data.product.name }}",
+            "Status": "={{ $json.body.event }}"
+          },
+          "matchingColumns": [
+            "Produto"
+          ],
+          "schema": [
+            {
+              "id": "Produto",
+              "displayName": "Produto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Sobrenome",
+              "displayName": "Sobrenome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefone",
+              "displayName": "Telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pais",
+              "displayName": "Pais",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        260,
+        -480
+      ],
+      "id": "1e3791d4-00c9-478f-b12d-a699908791b5",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hgJLwvNG8U3wIlYt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.event }}",
+                    "rightValue": "=PURCHASE_APPROVED",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Compra Aprovada"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b4333aed-f248-4f48-be76-ca77d427b0bd",
+                    "leftValue": "={{ $json.body.event }}",
+                    "rightValue": "PURCHASE_CANCELED",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Compra Cancelada"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "09bb0ed4-e33c-4e53-9a57-9be93d55d2ca",
+                    "leftValue": "={{ $json.body.event }}",
+                    "rightValue": "PURCHASE_EXPIRED",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Carrinho Abandonado"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -100,
+        -200
+      ],
+      "id": "5df2e8ea-cfd4-47a6-a0c6-629ec2283754",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://leadtrack.moonconsultoriadigital.com.br/message/sendText/o_professor_fernando",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "E5A748D86437-4D9D-A9A2-42BBA11D9E4B"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $json.Telefone }}"
+            },
+            {
+              "name": "text",
+              "value": "=Fala {{ $('Loop Over Items').item.json.Nome }}, tudo bem? Professor Fernando aqui.\n\nParabéns por dar o primeiro passo rumo à sua liberdade! Sua inscrição no Workshop \"O Seu Último Vídeo\" está quase 100% confirmada. Mas atenção:\n\n✅ Para garantir totalmente sua vaga e receber todas as informações importantes (link de acesso, atualizações e avisos), é ESSENCIAL que você entre no nosso grupo oficial do WhatsApp.\n\n👉 Clique aqui para entrar no grupo: https://chat.whatsapp.com/By3a2NNcLkoDqKUmcC8yC9\n\n🚨 E mais um pedido importante:\n\nEstou comprometidos em entregar a melhor experiência e conteúdo para você, e por isso, preciso conhecer melhor suas necessidades pessoais.\n\nResponda a nossa pesquisa rápida (leva menos de 2 minutos) e nos ajude a criar um workshop ainda mais direcionado para você.\n\n👉 Clique aqui para responder: https://forms.gle/BWL9id6QBaxGmUmk6\n\nSe tiver qualquer dúvida, é só responder esse e-mail. Estamos juntos nessa jornada!\n\nForte abraço,\nProfessor Fernando"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "66ad353a-4d36-40e7-b8de-da190b6af47b",
+      "name": "Envia imagem com texto",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1180,
+        -460
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://leadtrack.moonconsultoriadigital.com.br/message/sendText/nome-da-instancia",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "token-da-instancia"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $json.body.data.buyer.checkout_phone }}"
+            },
+            {
+              "name": "text",
+              "value": "mensagem para compra cancelada"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "fe183aa5-3ce5-4cf7-91c5-33fc8818a1d3",
+      "name": "Envia imagem com texto1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        -200
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "disabled": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Separa o evento que foi realizado na Hotmart",
+        "height": 240,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -340
+      ],
+      "typeVersion": 1,
+      "id": "1e3fa96d-1670-4667-bea2-00281b7be312",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Envia e-mail e dispara WhatsApp de compra",
+        "height": 240,
+        "width": 400,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        920,
+        -580
+      ],
+      "typeVersion": 1,
+      "id": "72e565ac-6050-41b2-a68e-fa79c6f63569",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://leadtrack.moonconsultoriadigital.com.br/message/sendText/nome-da-instancia",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "token-da-instancia"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $json.body.data.buyer.checkout_phone }}"
+            },
+            {
+              "name": "text",
+              "value": "mensagem para compra cancelada"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "494fd506-7b7a-4d84-a409-27f237d90fa5",
+      "name": "Envia imagem com texto2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        60
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "disabled": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "oseuultimovideo",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -420,
+        -420
+      ],
+      "id": "3e4fcbb9-3ea4-4c9f-9826-98ffb6a61597",
+      "name": "Webhook1",
+      "webhookId": "3a5a893d-94df-4e1d-864e-ed88db37a68e",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "mwEaOirAjogYfkTI",
+          "name": "Header Auth account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-08-03T04:31:16.250Z",
+  "versionId": "0ba18ea4-b495-43fd-a576-38b898937eda"
+}
