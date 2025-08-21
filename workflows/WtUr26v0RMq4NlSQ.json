@@ -1,0 +1,441 @@
+{
+  "active": false,
+  "connections": {
+    "Formata o Número": {
+      "main": [
+        [
+          {
+            "node": "Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data": {
+      "main": [
+        [
+          {
+            "node": "Nome e Sobrenome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nome e Sobrenome": {
+      "main": [
+        [
+          {
+            "node": "Origem do Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Origem do Lead": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dados": {
+      "main": [
+        [
+          {
+            "node": "Formata o Número",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-01-29T21:05:45.636Z",
+  "id": "WtUr26v0RMq4NlSQ",
+  "isArchived": false,
+  "meta": null,
+  "name": "Leadtrack",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Recebe o valor como entrada\nconst input = $('Dados').item.json.body.data.key.remoteJid;\n\n// Verifica se o valor está presente e é uma string\nif (input && typeof input === 'string') {\n  // Remove tudo após o \"@\" usando split e pega a primeira parte\n  const result = input.split('@')[0];\n\n  // Retorna o resultado\n  return {\n    output: result\n  };\n} else {\n  // Retorna uma mensagem de erro se o valor não for uma string\n  return {\n    error: ''\n  };\n}\n"
+      },
+      "id": "b860258c-8360-436d-bace-c1a921b3e3e1",
+      "name": "Formata o Número",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        80
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const currentDate = new Date();\n\n// Obter o dia, mês e ano\nconst day = currentDate.getDate();\nconst month = currentDate.getMonth() + 1; // Os meses começam do zero, então adicionamos 1\nconst year = currentDate.getFullYear();\n\n// Formatar a data no formato desejado (dia/mês/ano)\nconst formattedDate = `${day}/${month}/${year}`;\n\n// Obter a hora e o minuto\nconst hour = currentDate.getHours();\nconst minute = currentDate.getMinutes();\n\n// Formatar a hora no formato desejado (hora:minuto)\nconst formattedTime = `${hour}:${minute}`;\n\n// Retornar a data e a hora separadas\nreturn { \n    data: formattedDate,\n    hora: formattedTime\n};\n"
+      },
+      "id": "f65030a6-b431-48da-9bd1-eb5ce176543e",
+      "name": "Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        380,
+        80
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const nomeCompleto = $('Dados').item.json.Nome;\n\n// Dividir o nome completo em nome e sobrenome\nconst partesNome = nomeCompleto.split(' ');\n\n// Determinar o nome e sobrenome\nconst nome = partesNome[0];\nconst sobrenome = partesNome.length > 1 ? partesNome.slice(1).join(' ') : '';\n\n// Criar o objeto de saída\nconst saida = {\n  nome: nome,\n  sobrenome: sobrenome\n};\n\n// Saída do resultado\nreturn saida;"
+      },
+      "id": "580c99fe-d241-4e45-b5fc-f9fe9e752fc9",
+      "name": "Nome e Sobrenome",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        540,
+        80
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Facebook",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GWPUH9_7LWJQECUOknyMi5YnwXPVvGi4FtkflLCSsjo/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nome": "={{ $('Nome e Sobrenome').item.json.nome }}",
+            "Data": "={{ $('Data').item.json.data }}",
+            "Telefone": "={{ $('Webhook').item.json.body.data.key.remoteJid }}",
+            "Campanha": "={{ $json.data[0].campaign_name }}",
+            "Conjunto": "={{ $json.data[0].adset_name }}",
+            "Anúncio": "={{ $json.data[0].ad_name }}",
+            "Horário": "={{ $('Data').item.json.hora }}",
+            "Source": "={{ $('Dados').item.json.body.data.contextInfo.entryPointConversionApp }}",
+            "ThumbnailUrl": "={{ $('Webhook').item.json.body.data.message.audioMessage.contextInfo.externalAdReply.thumbnailUrl }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Data",
+              "displayName": "Data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefone",
+              "displayName": "Telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Campanha",
+              "displayName": "Campanha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Conjunto",
+              "displayName": "Conjunto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Anúncio",
+              "displayName": "Anúncio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Horário",
+              "displayName": "Horário",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ThumbnailUrl",
+              "displayName": "ThumbnailUrl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9eb55878-eac0-4763-9a39-fda64afe4732",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        60
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "83d028f0-714a-4e5f-bbd0-81e3025eab00",
+              "leftValue": "={{ $('Dados').item.json.Id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a13525a8-27a1-430c-888d-58f95d6f370a",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        80
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "1f5670ab-a5ac-40ad-afa4-17c75e8621f1",
+      "name": "No Operation, do nothing",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Dados').item.json.Id }}/insights?&fields=account_name,campaign_name,adset_name,ad_name",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Dados').item.json.Token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "17dacd64-882f-481c-a59d-35bd44ecf4f6",
+      "name": "Origem do Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        780,
+        80
+      ],
+      "retryOnFail": false,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "executeOnce": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "campo AD: {{ $json.data[0].ad_name }}",
+        "height": 80,
+        "width": 187.32394366197195
+      },
+      "id": "bb9d05b3-948b-442b-b590-8ab7814df9c0",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Token Global",
+        "height": 80,
+        "width": 150
+      },
+      "id": "3ff38786-e9aa-4e52-a101-2061e675599f",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "Cliente",
+              "stringValue": "={{ $json.body.apikey }}"
+            },
+            {
+              "name": "Telefone",
+              "stringValue": "={{ $json.body.data.key.remoteJid }}"
+            },
+            {
+              "name": "Id",
+              "stringValue": "={{ $json.body.data.contextInfo.externalAdReply.sourceId }}"
+            },
+            {
+              "name": "Nome",
+              "stringValue": "={{ $json.body.data.pushName }}"
+            },
+            {
+              "name": "Token",
+              "stringValue": "EAAQNcul6hkMBO6DZA9SudR9b90vrdZBtfxI1MBZBI51OHHoa40CRKRWTpU6ZCfkdphND5459BWR04OI8lpO4ZBYPow36yTJL3lysnmZAiiORmGAsu5eRUl0Sc8OaU7Fo3AfFJfUkVVUOvBHNOlKAOZCKCZAZA5wHtxZBkEZClGObArmL6ZAm6ZB6j2LyZC9MeQUrw2NWHlVAZDZD"
+            },
+            {
+              "name": "Origem",
+              "stringValue": "={{ $json.body.data.contextInfo.conversionSource }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "919964a5-d4eb-4988-9a67-a6d73124cef2",
+      "name": "Dados",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        40,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "kosmocar",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -180,
+        80
+      ],
+      "id": "15e50723-56bf-4977-ba78-45728f3e457e",
+      "name": "Webhook",
+      "webhookId": "1c312b23-0399-4c33-8064-e41d8977b4be"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-08-03T23:05:39.191Z",
+  "versionId": "b90fe0f6-89af-428e-b2b0-a8afe6510d45"
+}
