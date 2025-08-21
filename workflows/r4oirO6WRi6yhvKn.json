@@ -1,0 +1,658 @@
+{
+  "active": false,
+  "connections": {
+    "Formata o Número": {
+      "main": [
+        [
+          {
+            "node": "Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data": {
+      "main": [
+        [
+          {
+            "node": "Nome e Sobrenome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nome e Sobrenome": {
+      "main": [
+        [
+          {
+            "node": "Origem do Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Origem do Lead": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dados": {
+      "main": [
+        [
+          {
+            "node": "Formata o Número",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Criar contato no CRM1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Filtrar duplicado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar duplicado": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-02-18T19:08:43.672Z",
+  "id": "r4oirO6WRi6yhvKn",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Cadastro RD Station - Kosmocar",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Recebe o valor como entrada\nconst input = $('Dados').item.json.body.data.key.remoteJid;\n\n// Verifica se o valor está presente e é uma string\nif (input && typeof input === 'string') {\n  // Remove tudo após o \"@\" usando split e pega a primeira parte\n  const result = input.split('@')[0];\n\n  // Retorna o resultado\n  return {\n    output: result\n  };\n} else {\n  // Retorna uma mensagem de erro se o valor não for uma string\n  return {\n    error: ''\n  };\n}\n"
+      },
+      "id": "ef587256-0d39-4d9b-b580-cf633953d6ac",
+      "name": "Formata o Número",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1180,
+        60
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const currentDate = new Date();\n\n// Obter o dia, mês e ano\nconst day = currentDate.getDate();\nconst month = currentDate.getMonth() + 1; // Os meses começam do zero, então adicionamos 1\nconst year = currentDate.getFullYear();\n\n// Formatar a data no formato desejado (dia/mês/ano)\nconst formattedDate = `${day}/${month}/${year}`;\n\n// Obter a hora e o minuto\nconst hour = currentDate.getHours();\nconst minute = currentDate.getMinutes();\n\n// Formatar a hora no formato desejado (hora:minuto)\nconst formattedTime = `${hour}:${minute}`;\n\n// Retornar a data e a hora separadas\nreturn { \n    data: formattedDate,\n    hora: formattedTime\n};\n"
+      },
+      "id": "1eac00af-5933-4ccc-b193-fc087b92fb88",
+      "name": "Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1020,
+        60
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const nomeCompleto = $('Dados').item.json.Nome;\n\n// Dividir o nome completo em nome e sobrenome\nconst partesNome = nomeCompleto.split(' ');\n\n// Determinar o nome e sobrenome\nconst nome = partesNome[0];\nconst sobrenome = partesNome.length > 1 ? partesNome.slice(1).join(' ') : '';\n\n// Criar o objeto de saída\nconst saida = {\n  nome: nome,\n  sobrenome: sobrenome\n};\n\n// Saída do resultado\nreturn saida;"
+      },
+      "id": "de4fb86b-2e0d-4d28-b81f-5aab07e6fc83",
+      "name": "Nome e Sobrenome",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -860,
+        60
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Dados').item.json.Id }}/insights?&fields=account_name,campaign_name,adset_name,ad_name",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Dados').item.json.Token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "acd44bd9-74ff-4cea-aa22-fa9b02ecfbb9",
+      "name": "Origem do Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -620,
+        60
+      ],
+      "retryOnFail": false,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "executeOnce": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "campo AD: {{ $json.data[0].ad_name }}",
+        "height": 80,
+        "width": 187.32394366197195
+      },
+      "id": "98f91322-11c0-4bf9-8ae4-ba68058b8596",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1620,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Token Global",
+        "height": 80,
+        "width": 150
+      },
+      "id": "78612f93-70ea-4143-8ad4-e5eb935f1a7d",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1400,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "Cliente",
+              "stringValue": "={{ $json.body.apikey }}"
+            },
+            {
+              "name": "Telefone",
+              "stringValue": "={{ $json.body.data.key.remoteJid }}"
+            },
+            {
+              "name": "Id",
+              "stringValue": "={{ $json.body.data.contextInfo.externalAdReply.sourceId }}"
+            },
+            {
+              "name": "Nome",
+              "stringValue": "={{ $json.body.data.pushName }}"
+            },
+            {
+              "name": "Token",
+              "stringValue": "EAAQNcul6hkMBO6DZA9SudR9b90vrdZBtfxI1MBZBI51OHHoa40CRKRWTpU6ZCfkdphND5459BWR04OI8lpO4ZBYPow36yTJL3lysnmZAiiORmGAsu5eRUl0Sc8OaU7Fo3AfFJfUkVVUOvBHNOlKAOZCKCZAZA5wHtxZBkEZClGObArmL6ZAm6ZB6j2LyZC9MeQUrw2NWHlVAZDZD"
+            },
+            {
+              "name": "Origem",
+              "stringValue": "={{ $json.body.data.contextInfo.conversionSource }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "05b98d47-85c8-4398-ac4a-038d3561b81d",
+      "name": "Dados",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        -1360,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "kosmocar-pneus",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1560,
+        60
+      ],
+      "id": "4110a0b4-dd88-4fee-8dbd-25b4b4ceed51",
+      "name": "Webhook",
+      "webhookId": "f19e9958-e9e0-448b-a5d5-325c242b52eb"
+    },
+    {
+      "parameters": {
+        "content": "## Alterar\n\nCampos Nome e Telefone estão automáticos, o restante deve ser alterado de acordo com a necessidade e oque é permitido pela API\n",
+        "height": 240
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        -360
+      ],
+      "typeVersion": 1,
+      "id": "674839c8-8643-4d66-bd98-186a980d5869",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1Y2b1gDExS-mWEZdUASuczu1bucC5-s2DSqhYY1QMc3E/edit?gid=1498555570#gid=1498555570",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1910296430,
+          "mode": "list",
+          "cachedResultName": "Kosmocar",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y2b1gDExS-mWEZdUASuczu1bucC5-s2DSqhYY1QMc3E/edit#gid=1910296430"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Data de Entrada": "={{ $('Data').item.json.data }}",
+            "Horario": "={{ $('Data').item.json.hora }}",
+            "Nome e Sobrenome": "={{ $('Nome e Sobrenome').item.json.nome }}",
+            "Telefone": "={{ $('Formata o Número').item.json.output }}",
+            "Campanha": "={{ $('Origem do Lead').item.json.data[0].campaign_name }}",
+            "Conjunto": "={{ $('Origem do Lead').item.json.data[0].adset_name }}",
+            "Anuncio": "={{ $('Origem do Lead').item.json.data[0].ad_name }}",
+            "Mensagem ": "={{ $('Dados').item.json.body.data.contextInfo.externalAdReply.body }}",
+            "Link Criativo": "={{ $('Dados').item.json.body.data.contextInfo.externalAdReply.sourceUrl }}",
+            "Dispositivo": "={{ $('Dados').item.json.body.data.source }}",
+            "Plataforma URL": "={{ $('Dados').item.json.body.data.contextInfo.externalAdReply.thumbnailUrl }}",
+            "Conta": "={{ $('Origem do Lead').item.json.data[0].account_name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Conta",
+              "displayName": "Conta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Data de Entrada",
+              "displayName": "Data de Entrada",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Horario",
+              "displayName": "Horario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nome e Sobrenome",
+              "displayName": "Nome e Sobrenome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Telefone",
+              "displayName": "Telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Campanha",
+              "displayName": "Campanha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Conjunto",
+              "displayName": "Conjunto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Anuncio",
+              "displayName": "Anuncio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensagem ",
+              "displayName": "Mensagem ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Link Criativo",
+              "displayName": "Link Criativo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Dispositivo",
+              "displayName": "Dispositivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Plataforma URL",
+              "displayName": "Plataforma URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "74cd24d3-87d7-40c6-9312-a0dd244a030d",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        80
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hgJLwvNG8U3wIlYt",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "83d028f0-714a-4e5f-bbd0-81e3025eab00",
+              "leftValue": "={{ $('Dados').item.json.Id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "de5ac3ca-f25c-4d46-96ae-156887f8cb70",
+              "leftValue": "={{ $('Webhook').item.json.body.data.contextInfo.conversionSource }}",
+              "rightValue": "google",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "20a39064-ae6b-4693-89ed-78ca0aadddea",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        60
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "78a80ff5-2dfe-4d16-821d-9e2224e8bbff",
+      "name": "No Operation, do nothing",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1Y2b1gDExS-mWEZdUASuczu1bucC5-s2DSqhYY1QMc3E/edit?gid=1498555570#gid=1498555570",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1910296430,
+          "mode": "list",
+          "cachedResultName": "Kosmocar",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y2b1gDExS-mWEZdUASuczu1bucC5-s2DSqhYY1QMc3E/edit#gid=1910296430"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Telefone",
+              "lookupValue": "={{ $('Formata o Número').item.json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -180,
+        60
+      ],
+      "id": "2808d2a0-7d09-42f3-838f-f70d43366cc5",
+      "name": "Filtrar duplicado",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hgJLwvNG8U3wIlYt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "de5ac3ca-f25c-4d46-96ae-156887f8cb70",
+              "leftValue": "={{ $('Formata o Número').item.json.output.toNumber() }}",
+              "rightValue": "={{ $json.Telefone }}",
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "f3dc5aae-fe4e-4264-950f-d1e4dca3627e",
+              "leftValue": "={{ $('Data').item.json.data }}",
+              "rightValue": "={{ $json.Data }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a0297a8c-d081-4c6b-a8f6-d41c92b798b9",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        20,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://crm.rdstation.com/api/v1/contacts",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "67b2c677ee87d1001837658a"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"accept\": \"application/json\",\n  \"content-type\": \"application/json\",\n  \"Authorization\": \"Bearer 67b2c677ee87d1001837658a\"\n}\n",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contact\": {\n    \"name\": \"{{ $('Nome e Sobrenome').item.json.nome }}\",\n    \"organization\": {\n    \"name\": \"CASA DOS AMORTECEDORES\",\n    \"phones\": [\n      {\n        \"phone\": \"{{ $('Formata o Número').item.json.output }}\",\n        \"type\": \"home\"\n      }\n    ],\n    \"contact_custom_fields\": [\n      {\n        \"custom_field_id\": \"67a4d30e3f69ce001b3dbe50\",\n        \"value\": \"0\"\n      }\n    ]\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        500,
+        80
+      ],
+      "id": "b43683f1-e981-409c-8a5b-0e7413a13ce8",
+      "name": "Criar contato no CRM1",
+      "executeOnce": true,
+      "retryOnFail": true
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-02-18T19:01:18.929Z",
+      "updatedAt": "2025-02-18T19:01:18.929Z",
+      "id": "tGTguGrfT3S5Sa9w",
+      "name": "Ecossistema Kosmocar"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-08-03T04:31:07.563Z",
+  "versionId": "f5f60771-8881-4d53-a39b-dd481f40208d"
+}
