@@ -1,0 +1,777 @@
+{
+  "active": false,
+  "connections": {
+    "Gatilho por Horário": {
+      "main": [
+        [
+          {
+            "node": "Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Dados no Meta": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Desmembrar Dados": {
+      "main": [
+        [
+          {
+            "node": "Script para Alterar Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Script para Alterar Dados": {
+      "main": [
+        [
+          {
+            "node": "Mensagem",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Evolution API1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Dados Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base de Clientes": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Desmembrar Dados",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dados Cliente": {
+      "main": [
+        [
+          {
+            "node": "Buscar Dados no Meta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dados": {
+      "main": [
+        [
+          {
+            "node": "Base de Clientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensagem": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evolution API": {
+      "main": [
+        []
+      ]
+    },
+    "Evolution API1": {
+      "main": [
+        [
+          {
+            "node": "Evolution API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-03T04:22:49.562Z",
+  "id": "B4Iedr7KcASkqLMU",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": "={{ 1 }}",
+              "triggerAtHour": "={{ 7 }}",
+              "triggerAtMinute": "={{ 10 }}"
+            }
+          ]
+        }
+      },
+      "id": "345586b4-5907-4778-a9e4-6d1a6a00b588",
+      "name": "Gatilho por Horário",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -880,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "graphApiVersion": "v20.0",
+        "node": "=act_{{ $json['Conta_de_Anuncio'] }}",
+        "edge": "insights",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "time_increment",
+                "value": "1"
+              },
+              {
+                "name": "level",
+                "value": "ad"
+              },
+              {
+                "name": "fields",
+                "value": "=campaign_id,\ncampaign_name,\nadset_id,\nadset_name,\nad_id,\nad_name,\nspend,\nimpressions,\nclicks,\ncpc,\ncpm,\ncpp,\nctr,\nobjective,\nreach,\nactions"
+              },
+              {
+                "name": "limit",
+                "value": "3000"
+              },
+              {
+                "name": "date_preset",
+                "value": "yesterday"
+              }
+            ]
+          }
+        }
+      },
+      "id": "2aa2a38a-53b5-448e-a091-e7ab12969d1c",
+      "name": "Buscar Dados no Meta",
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "position": [
+        180,
+        220
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "b555ArpVh4WxF5sQ",
+          "name": "Facebook Graph account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "id": "41f0d101-d73a-4fc9-831e-1ee512976a59",
+      "name": "Desmembrar Dados",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        560,
+        200
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "let totalSpend = 0;\nlet totalLeads = 0;\nlet sumCPM = 0;\nlet sumCPP = 0;\nlet sumCTR = 0;\nlet totalLinkClicks = 0;  // Variável para acumular o valor de link_click\nlet countCPM = 0;\nlet countCPP = 0;\nlet countCTR = 0;\n\n// Função para converter string de valores para float, considerando tanto ponto quanto vírgula\nfunction convertToFloat(value) {\n    return parseFloat(value.replace(',', '.'));\n}\n\n// Itera sobre cada item (que representa um conjunto de dados da campanha)\nitems.forEach(item => {\n    const jsonData = item.json;\n\n    // Acumula o valor de spend\n    if (jsonData.spend !== undefined) {\n        totalSpend += convertToFloat(jsonData.spend);\n    }\n\n    // Verifica se o campo 'actions' existe e é um array\n    if (Array.isArray(jsonData.actions)) {\n        jsonData.actions.forEach(action => {\n            // Acumula o valor de link_click\n            if (action.action_type === \"link_click\") {\n                totalLinkClicks += parseInt(action.value, 10);\n            }\n            // Acumula o valor de leads (exemplo de ação específica)\n            if (action.action_type ===  $item(\"0\").$node[\"Dados\"].json[\"Action_type\"]) {\n                totalLeads += parseInt(action.value, 10);\n            }\n        });\n    }\n\n    // Acumula os valores de cpm, cpp, ctr para calcular a média\n    if (jsonData.cpm !== undefined) {\n        sumCPM += convertToFloat(jsonData.cpm);\n        countCPM++;\n    }\n    if (jsonData.cpp !== undefined) {\n        sumCPP += convertToFloat(jsonData.cpp);\n        countCPP++;\n    }\n    if (jsonData.ctr !== undefined && convertToFloat(jsonData.ctr) > 0) {\n        sumCTR += convertToFloat(jsonData.ctr);\n        countCTR++;\n    }\n});\n\n// Calcula as médias\nconst avgCPC = totalLinkClicks > 0 ? (totalSpend / totalLinkClicks) : 0;\nconst avgCPM = countCPM > 0 ? (sumCPM / countCPM) : 0;\nconst avgCPP = countCPP > 0 ? (sumCPP / countCPP) : 0;\nconst avgCTR = countCTR > 0 ? (sumCTR / countCTR) : 0;\nconst cpl = totalLeads > 0 ? (totalSpend / totalLeads) : 0;  // Calcula o CPL\n\n// Retorna apenas os dados acumulados\nreturn [\n    {\n        json: {\n            totalSpend: totalSpend.toFixed(2).replace('.', ','),\n            totalLeads: totalLeads,\n            totalLinkClicks: totalLinkClicks,  // Inclui o total de link_click no resultado\n            avgCPC: avgCPC.toFixed(2).replace('.', ','),\n            avgCPM: avgCPM.toFixed(2).replace('.', ','),\n            avgCPP: avgCPP.toFixed(2).replace('.', ','),\n            avgCTR: avgCTR.toFixed(2).replace('.', ','),\n            cpl: cpl.toFixed(2).replace('.', ',')\n        }\n    }\n];\n"
+      },
+      "id": "c85c7389-8829-4f0d-929a-21e42f5e884c",
+      "name": "Script para Alterar Dados",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        740,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "77f2955e-d382-489c-b46d-c66b822b8732",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -200,
+        200
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "3e6afeec-5979-4b30-811f-e303696703b7",
+      "name": "Replace Me",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        420
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "a86be5a1-1a9d-45e8-97b4-b485047e85e5",
+      "name": "No Operation, do nothing",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1GV3Lpr3rCzeghGYjaoMyNCbUEtYh10Yj34MRsqo4PTw",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GV3Lpr3rCzeghGYjaoMyNCbUEtYh10Yj34MRsqo4PTw/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "a9a21708-1ba2-4e3b-8076-ca751af3d686",
+      "name": "Base de Clientes",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        -400,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hgJLwvNG8U3wIlYt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Dados Cliente').first().json[\"Email\"] }}",
+        "subject": "Relatorio de Campanha",
+        "emailType": "text",
+        "message": "=📊 Relatório de campanha da conta {{ $('Dados Cliente').first().json[\"Cliente\"] }}\n\n🗓️ Data: {{ new Date(Date.now() - 86400000).toLocaleDateString('pt-BR') }}\n\n- Total de Cliques: {{ $('Script para Alterar Dados').item.json.totalLinkClicks }}\n- Custo Médio por Cliques: R$ {{ $('Script para Alterar Dados').item.json.avgCPC }}\n\n- Valor Total Investido: R${{ $('Script para Alterar Dados').item.json.totalSpend }}\n\n- Total de {{ $item('0').$node[\"Dados\"].json[\"Objetivo\"] }}: {{ $json.totalLeads }}\n- Custo Médio por {{ $item('0').$node[\"Dados\"].json[\"Objetivo\"] }}: R${{ $json.cpl }}\"",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Flux Automate"
+        }
+      },
+      "id": "4b4ed041-7f92-45d3-83fc-0a494c11e180",
+      "name": "Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        200
+      ],
+      "webhookId": "73b02c0d-4e34-4a4a-985e-5034e26606b1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "pHv4q8E99LfIkOse",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3152ba7b-2784-42d8-ad8c-a9f97ad61fc0",
+              "leftValue": "={{ $json.data }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0c960624-f02f-424f-8953-11c0ed72eb28",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        340,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bf0c339a-d3d1-4bc5-9079-d47ec4a2ae05",
+              "name": "Conta_de_Anuncio",
+              "value": "={{ $json['Conta de Anuncio'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f4600920-959d-4eef-8a5c-acca0be0158b",
+              "name": "Contato_do_cliente",
+              "value": "={{ $json['Contato do cliente'] }}",
+              "type": "string"
+            },
+            {
+              "id": "1ca84bfe-93ec-45bb-be63-27a93363980c",
+              "name": "Email",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "bf948392-b9f7-4698-b27a-8a979d5e144c",
+              "name": "Cliente",
+              "value": "={{ $json.Cliente }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4c2b5bb9-37bf-4380-b795-cd7b7f050d67",
+      "name": "Dados Cliente",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "030e2b8b-180b-4753-8ec2-2a70101aefb1",
+              "name": "url_evolution",
+              "value": "https://leadtrack.moonconsultoriadigital.com.br",
+              "type": "string"
+            },
+            {
+              "id": "81419d30-620a-4705-8816-03327870beab",
+              "name": "instancia",
+              "value": "Gabrielcenci1",
+              "type": "string"
+            },
+            {
+              "id": "ceeffd46-2654-4d6d-8c69-2914ee1fff93",
+              "name": "token",
+              "value": "AB299FAD7252-4F95-BB89-52B168B01FD1",
+              "type": "string"
+            },
+            {
+              "id": "3cdab645-994c-4ced-8ed6-a1dbc16782e5",
+              "name": "Action_type",
+              "value": "lead",
+              "type": "string"
+            },
+            {
+              "id": "103b5e28-ac3d-47d4-862f-82aa9e2f27a4",
+              "name": "Objetivo",
+              "value": "Leads",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "138c8503-e66a-42ab-a99c-5da8a55482fb",
+      "name": "Dados",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -640,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $item(\"0\").$node[\"Dados\"].json[\"url_evolution\"] }}/message/sendText/{{ $item(\"0\").$node[\"Dados\"].json[\"instancia\"] }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $item(\"0\").$node[\"Dados\"].json[\"token\"] }}"
+            },
+            {
+              "name": "content_type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"number\": \"{{ $item('0').$node[\"Dados Cliente\"].json[\"Contato_do_cliente\"] }}\",\n    \"text\": \"📊 *Relatório de campanha da conta*{{$('Dados Cliente').first().json[\"Cliente\"] }}*\\n\\n🗓️ *Data:* {{ new Date(Date.now() - 86400000).toLocaleDateString('pt-BR') }}\\n\\n- *Total de Cliques:* {{ $json.totalLinkClicks }}\\n- *Custo Médio por Cliques:* R${{ $json.avgCPC }}\\n\\n-*Valor Total Investido:* R${{ $json.totalSpend }}\\n\\n- *Total de {{ $item('0').$node[\"Dados\"].json[\"Objetivo\"] }}:* {{ $json.totalLeads }}\\n- *Custo Médio por {{ $item('0').$node[\"Dados\"].json[\"Objetivo\"] }}:* R${{ $json.cpl }}\"\n}",
+        "options": {}
+      },
+      "id": "aec4a9f0-cb62-4da7-847a-ce8cb12c809e",
+      "name": "Mensagem",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        940,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Dados\n**Alterar apenas aqui",
+        "height": 309.5559926974605,
+        "width": 437.4719903578132
+      },
+      "id": "b83800f1-7049-4c46-94ac-20587636e180",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -700,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Gabrielcenci1",
+        "remoteJid": "=5548992213175",
+        "messageText": "=Teste {{ $json.totalLinkClicks }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        -40
+      ],
+      "id": "022e4d4e-2279-4f7d-840d-fa8becfbb88d",
+      "name": "Evolution API",
+      "credentials": {
+        "evolutionApi": {
+          "id": "ZoYyvdjDxoM3K7Mh",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "instance-connect",
+        "instanceName": "Gabrielcenci1"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        860,
+        -60
+      ],
+      "id": "ec5659eb-891b-4ff6-874b-be1608c9380a",
+      "name": "Evolution API1",
+      "credentials": {
+        "evolutionApi": {
+          "id": "ZoYyvdjDxoM3K7Mh",
+          "name": "Evolution account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Buscar Dados no Meta": [
+      {
+        "json": {
+          "data": [
+            {
+              "campaign_id": "120212904934090422",
+              "campaign_name": "0134|VIDEO-VIEW|TOFU|ENGAJAMENTO|FABIO|WHATSAPP",
+              "adset_id": "120212904934100422",
+              "adset_name": "PUBLICO SALVO|25-55|BRASIL|INSTAGRAM|STORIES / REELS",
+              "ad_id": "120212904934110422",
+              "ad_name": "New Engagement Ad",
+              "spend": "7.8",
+              "impressions": "1091",
+              "clicks": "2",
+              "cpc": "3.9",
+              "cpm": "7.149404",
+              "cpp": "9.363746",
+              "ctr": "0.183318",
+              "objective": "OUTCOME_ENGAGEMENT",
+              "reach": "833",
+              "actions": [
+                {
+                  "action_type": "post_engagement",
+                  "value": "368"
+                },
+                {
+                  "action_type": "page_engagement",
+                  "value": "368"
+                },
+                {
+                  "action_type": "video_view",
+                  "value": "368"
+                }
+              ],
+              "date_start": "2024-11-03",
+              "date_stop": "2024-11-03"
+            },
+            {
+              "campaign_id": "120213044326310422",
+              "campaign_name": "0135|VIDEO-VIEW|TOFU|ENGAJAMENTO|FABIO|WHATSAPP",
+              "adset_id": "120213044326330422",
+              "adset_name": "LOOKALIKE|Semelhante|Brasil|INSTAGRAM|STORIES / REELS",
+              "ad_id": "120213044326370422",
+              "ad_name": "VIDEO|Publicação Fabio Google",
+              "spend": "7.14",
+              "impressions": "1928",
+              "clicks": "13",
+              "cpc": "0.549231",
+              "cpm": "3.70332",
+              "cpp": "3.851133",
+              "ctr": "0.674274",
+              "objective": "OUTCOME_ENGAGEMENT",
+              "reach": "1854",
+              "actions": [
+                {
+                  "action_type": "post_engagement",
+                  "value": "1140"
+                },
+                {
+                  "action_type": "page_engagement",
+                  "value": "1140"
+                },
+                {
+                  "action_type": "video_view",
+                  "value": "1134"
+                },
+                {
+                  "action_type": "post_reaction",
+                  "value": "4"
+                },
+                {
+                  "action_type": "link_click",
+                  "value": "2"
+                }
+              ],
+              "date_start": "2024-11-03",
+              "date_stop": "2024-11-03"
+            },
+            {
+              "campaign_id": "120213254549830422",
+              "campaign_name": "0202|CADASTRO|MEFU|CADASTRO|FABIO|WHATSAPP",
+              "adset_id": "120213254549790422",
+              "adset_name": "INTERESSE|25-50|BRASIL|INSTAGRAM|TODOS",
+              "ad_id": "120213254549820422",
+              "ad_name": "VIDEO|0020 - FINANCIAMENTO - ANDANDO COM GRE",
+              "spend": "25.47",
+              "impressions": "345",
+              "clicks": "16",
+              "cpc": "1.591875",
+              "cpm": "73.826087",
+              "cpp": "75.803571",
+              "ctr": "4.637681",
+              "objective": "OUTCOME_LEADS",
+              "reach": "336",
+              "actions": [
+                {
+                  "action_type": "post_engagement",
+                  "value": "85"
+                },
+                {
+                  "action_type": "page_engagement",
+                  "value": "85"
+                },
+                {
+                  "action_type": "lead",
+                  "value": "5"
+                },
+                {
+                  "action_type": "onsite_conversion.lead_grouped",
+                  "value": "5"
+                },
+                {
+                  "action_type": "video_view",
+                  "value": "77"
+                },
+                {
+                  "action_type": "link_click",
+                  "value": "8"
+                }
+              ],
+              "date_start": "2024-11-03",
+              "date_stop": "2024-11-03"
+            },
+            {
+              "campaign_id": "120213255149980422",
+              "campaign_name": "0203|CADASTRO|TOFU|CADASTRO|FABIO|INSTAGRAM",
+              "adset_id": "120213255149970422",
+              "adset_name": "INTERESSE|25-50|BRASIL|INSTAGRAM|TODOS",
+              "ad_id": "120213255149960422",
+              "ad_name": "VIDEO|FINANCIAMENTO - CARRO",
+              "spend": "27.02",
+              "impressions": "329",
+              "clicks": "3",
+              "cpc": "9.006667",
+              "cpm": "82.12766",
+              "cpp": "84.968553",
+              "ctr": "0.911854",
+              "objective": "OUTCOME_LEADS",
+              "reach": "318",
+              "actions": [
+                {
+                  "action_type": "post_engagement",
+                  "value": "83"
+                },
+                {
+                  "action_type": "page_engagement",
+                  "value": "83"
+                },
+                {
+                  "action_type": "lead",
+                  "value": "1"
+                },
+                {
+                  "action_type": "post",
+                  "value": "1"
+                },
+                {
+                  "action_type": "onsite_conversion.lead_grouped",
+                  "value": "1"
+                },
+                {
+                  "action_type": "video_view",
+                  "value": "79"
+                },
+                {
+                  "action_type": "post_reaction",
+                  "value": "1"
+                },
+                {
+                  "action_type": "link_click",
+                  "value": "2"
+                }
+              ],
+              "date_start": "2024-11-03",
+              "date_stop": "2024-11-03"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-08-03T04:04:39.725Z",
+      "updatedAt": "2025-08-03T04:04:39.725Z",
+      "id": "CbOxe6wvvWTMTcRN",
+      "name": "Flux Automate"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-08-03T17:58:15.946Z",
+  "versionId": "2c36c635-9432-4450-a9ec-dbfc11295d62"
+}
