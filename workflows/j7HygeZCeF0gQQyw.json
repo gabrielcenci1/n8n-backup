@@ -154,7 +154,8 @@
         "queryParameters": {
           "parameters": [
             {
-              "name": "access_token"
+              "name": "access_token",
+              "value": "EAAQMNkZChKw0BPNiTVt93SNwHZCO3kKsI0ahOOfIUWeefT7pFhE6Aq8gTgdknj1DSx10STS1aSJ2fkrgeWGNYIGGpNJo0nW82KaJh52fWMcP1ZAs3jchHgZCLcbsyuk9AFQLeTIG63SSFxX07b4TyJqAgUnUMoOdIc7ZCBcMjYfILvRL9IRTt9dPYupLWwAFvAwZDZD"
             },
             {
               "name": "fields",
@@ -178,41 +179,25 @@
         "operation": "update",
         "schema": {
           "__rl": true,
-          "value": "rastreio_whats",
+          "value": "public",
           "mode": "list",
-          "cachedResultName": "rastreio_whats"
+          "cachedResultName": "public"
         },
         "table": {
           "__rl": true,
-          "value": "whatsapp_anuncio",
+          "value": "Tracking",
           "mode": "list",
-          "cachedResultName": "whatsapp_anuncio"
+          "cachedResultName": "Tracking"
         },
         "columns": {
           "mappingMode": "defineBelow",
-          "value": {
-            "telefone": "={{ $node[\"Junta info a ser armazenada\"].json[\"telefone\"] }}",
-            "processado": "L",
-            "status": "Lead"
-          },
-          "matchingColumns": [
-            "telefone"
-          ],
+          "value": {},
+          "matchingColumns": [],
           "schema": [
             {
-              "id": "telefone",
-              "displayName": "telefone",
+              "id": "Telefone",
+              "displayName": "Telefone",
               "required": true,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "id_transacao",
-              "displayName": "id_transacao",
-              "required": false,
               "defaultMatch": false,
               "display": true,
               "type": "string",
@@ -220,8 +205,8 @@
               "removed": true
             },
             {
-              "id": "data_criacao",
-              "displayName": "data_criacao",
+              "id": "data_da_criacao",
+              "displayName": "data_da_criacao",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -270,36 +255,6 @@
               "removed": true
             },
             {
-              "id": "cidade",
-              "displayName": "cidade",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "estado",
-              "displayName": "estado",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "pais",
-              "displayName": "pais",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
               "id": "moeda",
               "displayName": "moeda",
               "required": false,
@@ -316,8 +271,7 @@
               "defaultMatch": false,
               "display": true,
               "type": "number",
-              "canBeUsedToMatch": true,
-              "removed": true
+              "canBeUsedToMatch": true
             },
             {
               "id": "item_id",
@@ -326,8 +280,7 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
+              "canBeUsedToMatch": true
             },
             {
               "id": "item_name",
@@ -336,18 +289,7 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "mensagem",
-              "displayName": "mensagem",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
+              "canBeUsedToMatch": true
             },
             {
               "id": "cta",
@@ -356,8 +298,7 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
+              "canBeUsedToMatch": true
             },
             {
               "id": "ctwaclid",
@@ -366,8 +307,7 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
+              "canBeUsedToMatch": true
             },
             {
               "id": "source_url",
@@ -376,8 +316,7 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
+              "canBeUsedToMatch": true
             },
             {
               "id": "thumbnail",
@@ -386,8 +325,7 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
+              "canBeUsedToMatch": true
             },
             {
               "id": "status",
@@ -399,14 +337,13 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "plataforma",
-              "displayName": "plataforma",
+              "id": "plataform",
+              "displayName": "plataform",
               "required": false,
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
+              "canBeUsedToMatch": true
             },
             {
               "id": "processado",
@@ -416,8 +353,19 @@
               "display": true,
               "type": "string",
               "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_compra",
+              "displayName": "data_compra",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
             }
-          ]
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
         },
         "options": {}
       },
@@ -428,7 +376,13 @@
       "position": [
         544,
         208
-      ]
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "HMiuHUzKKUk3awOn",
+          "name": "Postgres account"
+        }
+      }
     },
     {
       "parameters": {
@@ -881,7 +835,8 @@
         "queryParameters": {
           "parameters": [
             {
-              "name": "access_token"
+              "name": "access_token",
+              "value": "EAAQMNkZChKw0BPNiTVt93SNwHZCO3kKsI0ahOOfIUWeefT7pFhE6Aq8gTgdknj1DSx10STS1aSJ2fkrgeWGNYIGGpNJo0nW82KaJh52fWMcP1ZAs3jchHgZCLcbsyuk9AFQLeTIG63SSFxX07b4TyJqAgUnUMoOdIc7ZCBcMjYfILvRL9IRTt9dPYupLWwAFvAwZDZD"
             }
           ]
         },
@@ -941,7 +896,7 @@
               "key": {
                 "remoteJid": "421312312231@s.whatsapp.net",
                 "fromMe": false,
-                "id": "87FDBB3D7F5D2820847CC01FE7CA168B"
+                "id": "S"
               },
               "pushName": "Nome",
               "message": {
@@ -968,7 +923,7 @@
                   "mediaUrl": "https://www.facebook.com/dericsoncalari/videos/3810417475905123/",
                   "thumbnail": "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",
                   "sourceType": "ad",
-                  "sourceId": "120213008132720555",
+                  "sourceId": "120228752402460024",
                   "sourceUrl": "https://www.instagram.com/p/C-tNHk_gbQf/",
                   "containsAutoReply": false,
                   "renderLargerThumbnail": true,
@@ -1007,8 +962,15 @@
     }
   ],
   "staticData": null,
-  "tags": [],
+  "tags": [
+    {
+      "createdAt": "2025-08-22T01:19:40.301Z",
+      "updatedAt": "2025-08-22T01:19:40.301Z",
+      "id": "ml2jFwpSomSX3tMZ",
+      "name": "Kosmocar"
+    }
+  ],
   "triggerCount": 1,
-  "updatedAt": "2025-08-22T00:30:29.895Z",
-  "versionId": "86e331d3-53aa-490b-a54c-0c4d6473d3a4"
+  "updatedAt": "2025-08-22T01:19:48.033Z",
+  "versionId": "c1331504-95b9-44a6-9de8-2f675350ed5c"
 }
