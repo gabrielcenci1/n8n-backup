@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "n8n": {
       "main": [
@@ -233,7 +233,7 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "name": "My workflow 3",
+  "name": "GiftHub Backup",
   "nodes": [
     {
       "parameters": {},
@@ -252,8 +252,8 @@
       "name": "Execute Workflow Trigger",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "position": [
-        -380,
-        760
+        -384,
+        768
       ],
       "typeVersion": 1
     },
@@ -266,8 +266,8 @@
       "name": "n8n",
       "type": "n8n-nodes-base.n8n",
       "position": [
-        260,
-        100
+        272,
+        112
       ],
       "typeVersion": 1,
       "credentials": {
@@ -296,7 +296,7 @@
       "type": "n8n-nodes-base.set",
       "position": [
         1440,
-        580
+        592
       ],
       "typeVersion": 3.3
     },
@@ -309,8 +309,8 @@
       "name": "Get File",
       "type": "n8n-nodes-base.httpRequest",
       "position": [
-        540,
-        460
+        544,
+        464
       ],
       "typeVersion": 4.2
     },
@@ -353,7 +353,7 @@
       "name": "If file too large",
       "type": "n8n-nodes-base.if",
       "position": [
-        340,
+        352,
         480
       ],
       "typeVersion": 2
@@ -364,8 +364,8 @@
       "name": "Merge Items",
       "type": "n8n-nodes-base.merge",
       "position": [
-        340,
-        740
+        352,
+        752
       ],
       "typeVersion": 2
     },
@@ -377,8 +377,8 @@
       "name": "isDiffOrNew",
       "type": "n8n-nodes-base.code",
       "position": [
-        540,
-        740
+        544,
+        752
       ],
       "typeVersion": 1
     },
@@ -406,8 +406,8 @@
       "name": "Check Status",
       "type": "n8n-nodes-base.switch",
       "position": [
-        760,
-        740
+        768,
+        752
       ],
       "typeVersion": 1
     },
@@ -417,8 +417,8 @@
       "name": "Same file - Do nothing",
       "type": "n8n-nodes-base.noOp",
       "position": [
-        980,
-        580
+        992,
+        592
       ],
       "typeVersion": 1
     },
@@ -428,8 +428,8 @@
       "name": "File is different",
       "type": "n8n-nodes-base.noOp",
       "position": [
-        980,
-        740
+        992,
+        752
       ],
       "typeVersion": 1
     },
@@ -439,8 +439,8 @@
       "name": "File is new",
       "type": "n8n-nodes-base.noOp",
       "position": [
-        980,
-        900
+        992,
+        912
       ],
       "typeVersion": 1
     },
@@ -466,7 +466,7 @@
       "type": "n8n-nodes-base.github",
       "position": [
         1200,
-        900
+        912
       ],
       "typeVersion": 1,
       "webhookId": "68ea49fa-0c27-4d6f-85c7-a7154b62dd0d",
@@ -519,8 +519,8 @@
       "name": "Loop Over Items",
       "type": "n8n-nodes-base.splitInBatches",
       "position": [
-        460,
-        100
+        464,
+        112
       ],
       "typeVersion": 3
     },
@@ -540,7 +540,7 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "position": [
         0,
-        200
+        208
       ],
       "typeVersion": 1.2
     },
@@ -566,7 +566,7 @@
       "name": "Get file data",
       "type": "n8n-nodes-base.github",
       "position": [
-        140,
+        144,
         480
       ],
       "typeVersion": 1,
@@ -625,8 +625,8 @@
       "name": "Execute Workflow",
       "type": "n8n-nodes-base.executeWorkflow",
       "position": [
-        680,
-        120
+        688,
+        128
       ],
       "typeVersion": 1
     }
@@ -635,9 +635,22 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "shared": [
+    {
+      "createdAt": "2025-08-21T23:10:00.253Z",
+      "updatedAt": "2025-08-21T23:10:00.253Z",
+      "role": "workflow:owner",
+      "workflowId": "dZE4UYRrYHd94u1d",
+      "projectId": "9qrimWxJSBUg3pgh"
+    }
+  ],
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
   "tags": [],
-  "triggerCount": 0,
-  "updatedAt": "2025-08-21T23:10:00.253Z",
-  "versionId": "b2fb101a-9030-4eb2-a648-e07cd6f45569"
+  "triggerCount": 1,
+  "updatedAt": "2025-08-21T23:17:56.907Z",
+  "versionId": "1155bf3c-4e8c-4152-b329-7a3f4e984402"
 }
