@@ -1,0 +1,1014 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Lead está no banco?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar o ID do pixel vinculado ao anúncio": {
+      "main": [
+        [
+          {
+            "node": "Extrair ID pixel e page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead está no banco?": {
+      "main": [
+        [
+          {
+            "node": "Se não estiver, passa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Se não estiver, passa": {
+      "main": [
+        [
+          {
+            "node": "Pega data de entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pega data de entrada": {
+      "main": [
+        [
+          {
+            "node": "Junta info a ser armazenada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Junta info a ser armazenada": {
+      "main": [
+        [
+          {
+            "node": "Insere as infos no banco",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insere as infos no banco": {
+      "main": [
+        [
+          {
+            "node": "Formatar data para timestamp para a Meta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar data para timestamp para a Meta": {
+      "main": [
+        [
+          {
+            "node": "Criptografar telefone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Criptografar telefone": {
+      "main": [
+        [
+          {
+            "node": "Buscar o ID do pixel vinculado ao anúncio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extrair ID pixel e page": {
+      "main": [
+        [
+          {
+            "node": "Enviar conversão de Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar conversão de Lead": {
+      "main": [
+        [
+          {
+            "node": "Postgres2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-08-21T23:18:11.085Z",
+  "id": "j7HygeZCeF0gQQyw",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Tracking",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "gabriel",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1952,
+        208
+      ],
+      "id": "b07b4019-6b57-4113-bc83-a9225e12bf18",
+      "name": "Webhook1",
+      "webhookId": "11f6aefd-bbc2-4989-a169-eb94c741be73"
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.facebook.com/v20.0/{{ $node[\"Junta info a ser armazenada\"].json[\"source_id\"] }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "access_token"
+            },
+            {
+              "name": "fields",
+              "value": "tracking_specs"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "73263e4d-9213-4a94-a99a-33bef969f642",
+      "name": "Buscar o ID do pixel vinculado ao anúncio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -128,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "rastreio_whats",
+          "mode": "list",
+          "cachedResultName": "rastreio_whats"
+        },
+        "table": {
+          "__rl": true,
+          "value": "whatsapp_anuncio",
+          "mode": "list",
+          "cachedResultName": "whatsapp_anuncio"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telefone": "={{ $node[\"Junta info a ser armazenada\"].json[\"telefone\"] }}",
+            "processado": "L",
+            "status": "Lead"
+          },
+          "matchingColumns": [
+            "telefone"
+          ],
+          "schema": [
+            {
+              "id": "telefone",
+              "displayName": "telefone",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "id_transacao",
+              "displayName": "id_transacao",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "data_criacao",
+              "displayName": "data_criacao",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "source_id",
+              "displayName": "source_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "nome",
+              "displayName": "nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sobrenome",
+              "displayName": "sobrenome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cidade",
+              "displayName": "cidade",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "pais",
+              "displayName": "pais",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "moeda",
+              "displayName": "moeda",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "valor_venda",
+              "displayName": "valor_venda",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "item_id",
+              "displayName": "item_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "item_name",
+              "displayName": "item_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cta",
+              "displayName": "cta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ctwaclid",
+              "displayName": "ctwaclid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "source_url",
+              "displayName": "source_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "thumbnail",
+              "displayName": "thumbnail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "plataforma",
+              "displayName": "plataforma",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "processado",
+              "displayName": "processado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5debbcd5-6b7a-4b72-9e89-23f6902e06d3",
+      "name": "Postgres2",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        544,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Tracking",
+          "mode": "list",
+          "cachedResultName": "Tracking"
+        },
+        "where": {
+          "values": [
+            {
+              "column": "Telefone",
+              "value": "={{ $json.body.data.key.remoteJid.split('@')[0] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "47930354-1547-42d6-8cdd-5eb031a29b14",
+      "name": "Lead está no banco?",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -1728,
+        208
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "HMiuHUzKKUk3awOn",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "db4c4cfc-bdc8-48fd-9a79-96b17852642b",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "98ee11e7-d68f-4fe6-a27b-fe44dd8e8159",
+      "name": "Se não estiver, passa",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.1,
+      "position": [
+        -1488,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "includeInputFields": true,
+          "timezone": "America/Sao_Paulo"
+        }
+      },
+      "id": "2b8d2413-8b84-4e76-a83a-3eb9b8c5a243",
+      "name": "Pega data de entrada",
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -1264,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4bbf5a3b-7bf3-47ed-a400-8d069081244d",
+              "name": "telefone",
+              "value": "={{ $('Webhook1').item.json.body.data.key.remoteJid.split('@')[0]\n }}",
+              "type": "string"
+            },
+            {
+              "id": "b28e11d3-fb42-4721-a07a-2b6b3ace3132",
+              "name": "data_criacao",
+              "value": "={{ $node[\"Pega data de entrada\"].json[\"currentDate\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "2d2f346c-546c-4695-9821-780288865d66",
+              "name": "source_id",
+              "value": "={{ $('Webhook1').item.json.body.data.contextInfo.externalAdReply.sourceId }}",
+              "type": "string"
+            },
+            {
+              "id": "b6c67c75-ed25-44c2-aa7f-c2e3112fc65f",
+              "name": "nome",
+              "value": "={{ $('Webhook1').item.json.body.data.pushName }}",
+              "type": "string"
+            },
+            {
+              "id": "a338a587-9ede-4d20-a337-178d67810742",
+              "name": "mensagem",
+              "value": "={{ $('Webhook1').item.json.body.data.contextInfo.externalAdReply.body }}",
+              "type": "string"
+            },
+            {
+              "id": "4611fec0-d5c1-425e-994e-698ecf3f3fda",
+              "name": "cta",
+              "value": "={{ $('Webhook1').item.json.body.data.message.conversation }}",
+              "type": "string"
+            },
+            {
+              "id": "9a693c60-1067-47f8-b591-b25e64ad3fe6",
+              "name": "ctwaclid",
+              "value": "={{ $('Webhook1').item.json.body.data.contextInfo.externalAdReply.ctwaClid }}",
+              "type": "string"
+            },
+            {
+              "id": "ec90713c-f35d-426d-ab3b-d0d8846c948a",
+              "name": "source_url",
+              "value": "={{ $('Webhook1').item.json.body.data.contextInfo.externalAdReply.sourceUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "e5ef1158-9d48-43de-bc4a-ddfb55a65107",
+              "name": "thumbnail",
+              "value": "={{ $('Webhook1').item.json.body.data.contextInfo.externalAdReply.thumbnail }}",
+              "type": "string"
+            },
+            {
+              "id": "956511cd-9086-4dc7-aa37-869168a00f83",
+              "name": "sobrenome",
+              "value": "={{ $('Webhook1').item.json.body.data.pushName }}",
+              "type": "string"
+            },
+            {
+              "id": "bdb356ea-5a7b-42b8-9d5f-32ed93dc928f",
+              "name": "status",
+              "value": "Entrou em contato",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "25a8bfbc-2235-4a2f-92e4-032d2f18a7d6",
+      "name": "Junta info a ser armazenada",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1040,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Tracking",
+          "mode": "list",
+          "cachedResultName": "Tracking"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "source_id": "={{ $json.source_id }}",
+            "Telefone": "={{ $json.telefone }}",
+            "data_da_criacao": "={{ $json.data_criacao }}",
+            "nome": "={{ $json.nome }}",
+            "sobrenome": "={{ $json.nome }}",
+            "moeda": "BRL",
+            "cta": "={{ $json.cta }}",
+            "ctwaclid": "={{ $json.ctwaclid }}",
+            "source_url": "={{ $json.source_url }}",
+            "thumbnail": "={{ $json.thumbnail }}",
+            "status": "={{ $json.status }}",
+            "plataform": "Whatsapp",
+            "processado": "Lead"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Telefone",
+              "displayName": "Telefone",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_da_criacao",
+              "displayName": "data_da_criacao",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source_id",
+              "displayName": "source_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nome",
+              "displayName": "nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sobrenome",
+              "displayName": "sobrenome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "moeda",
+              "displayName": "moeda",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "valor_venda",
+              "displayName": "valor_venda",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "item_id",
+              "displayName": "item_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "item_name",
+              "displayName": "item_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "cta",
+              "displayName": "cta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ctwaclid",
+              "displayName": "ctwaclid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source_url",
+              "displayName": "source_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "thumbnail",
+              "displayName": "thumbnail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "plataform",
+              "displayName": "plataform",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "processado",
+              "displayName": "processado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data_compra",
+              "displayName": "data_compra",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "ea595a7b-d271-4d36-91f6-12921a226a55",
+      "name": "Insere as infos no banco",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -832,
+        208
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "postgres": {
+          "id": "HMiuHUzKKUk3awOn",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $node[\"Pega data de entrada\"].json[\"currentDate\"] }}",
+        "format": "X",
+        "outputFieldName": "dataTimestamp",
+        "options": {}
+      },
+      "id": "b4a310ad-5755-447d-878a-dec0344025eb",
+      "name": "Formatar data para timestamp para a Meta",
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -592,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "type": "SHA256",
+        "value": "={{ $node[\"Junta info a ser armazenada\"].json[\"telefone\"] }}",
+        "dataPropertyName": "dataPhone"
+      },
+      "id": "4e353533-114a-4aa9-90b1-861c9d0a6ea4",
+      "name": "Criptografar telefone",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Função para procurar \"dataset\" e \"page\"\nfunction findDatasetAndPage(jsonObj) {\n    let result = {\n        dataset: [],\n        page: []\n    };\n\n    function searchInObject(obj) {\n        if (obj && typeof obj === 'object') {\n            // Coleta \"dataset\" e fallback para \"fb_pixel\"\n            if (obj['dataset']) {\n                result.dataset.push(...obj['dataset']);\n            } else if (obj['fb_pixel']) {\n                result.dataset.push(...obj['fb_pixel']);\n            }\n\n            // Coleta \"page\" apenas\n            if (obj['page']) {\n                result.page.push(...obj['page']);\n            }\n\n            // Percorre os sub-objetos e arrays recursivamente\n            for (let key in obj) {\n                if (obj.hasOwnProperty(key) && typeof obj[key] === 'object') {\n                    searchInObject(obj[key]);\n                }\n            }\n        }\n    }\n\n    searchInObject(jsonObj);\n    return result;\n}\n\n// A entrada do n8n geralmente vem em um formato específico. Pegue os dados de entrada.\nconst inputData = $input.all();\n\nlet finalResult = [];\n\ninputData.forEach(item => {\n    // Use a função para procurar os valores de \"dataset\" e \"page\"\n    const datasetsAndPages = findDatasetAndPage(item.json);\n    \n    // Adiciona os resultados encontrados apenas se houver pelo menos um dataset ou page\n    if (datasetsAndPages.dataset.length > 0 || datasetsAndPages.page.length > 0) {\n        finalResult.push({ json: datasetsAndPages });\n    }\n});\n\n// Retorna os dados no formato esperado pelo n8n\nreturn finalResult;"
+      },
+      "id": "ab1d59b3-e854-42a0-9336-55496b16cf27",
+      "name": "Extrair ID pixel e page",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        96,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v20.0/{{ $node[\"Extrair ID pixel e page\"].json[\"dataset\"][\"0\"] }}/events",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "access_token"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"data\": [\n    {\n      \"action_source\": \"business_messaging\",\n      \"event_name\": \"LeadSubmitted\",\n      \"event_time\": {{ $('Formatar data para timestamp para a Meta').item.json.dataTimestamp }},\n      \"messaging_channel\": \"whatsapp\",\n      \"user_data\": {\n        \"ph\": \"{{ $('Criptografar telefone').item.json.dataPhone }}\",\n        \"ctwa_clid\": \"{{ $('Junta info a ser armazenada').item.json.ctwaclid }}\",\n        \"page_id\": \"{{ $json.page[0] }}\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "775efd58-81ef-4f2c-a796-300d97f477f5",
+      "name": "Enviar conversão de Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Atenção!\n\nCuide para que aqui não tenha configurações a mais do que mostrado em aula.",
+        "height": 420.240969606607
+      },
+      "id": "20c4a88e-243e-4fdd-84c7-f8c85a1a7b8c",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        496,
+        0
+      ]
+    }
+  ],
+  "pinData": {
+    "Webhook1": [
+      {
+        "json": {
+          "headers": {
+            "host": "webhook.samuelchoairy.com",
+            "user-agent": "axios/1.7.5",
+            "content-length": "5134",
+            "accept": "application/json, text/plain, */*",
+            "accept-encoding": "gzip, compress, deflate, br",
+            "content-type": "application/json",
+            "x-forwarded-for": "162.55.183.217",
+            "x-forwarded-host": "webhook.agenciamurupi.com",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik_traefik.1",
+            "x-real-ip": "162.55.183.217"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "event": "messages.upsert",
+            "instance": "MKC",
+            "data": {
+              "key": {
+                "remoteJid": "421312312231@s.whatsapp.net",
+                "fromMe": false,
+                "id": "87FDBB3D7F5D2820847CC01FE7CA168B"
+              },
+              "pushName": "Nome",
+              "message": {
+                "messageContextInfo": {
+                  "deviceListMetadata": {
+                    "senderKeyHash": "zk75f1iodAoJ4Q==",
+                    "senderTimestamp": "1726766901",
+                    "recipientKeyHash": "eWgNfxC1fSD67A==",
+                    "recipientTimestamp": "1726764448"
+                  },
+                  "deviceListMetadataVersion": 2
+                },
+                "conversation": "Olá! Tenho interesse em ter uma estrutura 100% rastreada e traqueada no WPP."
+              },
+              "contextInfo": {
+                "conversionSource": "FB_Ads",
+                "conversionData": "QVJEeGwzRlVRQ2R2bld0YWQzanJjOHNZb2twNGtENDQydTc4WjdvVDRic3JWTEUxeTBSSzh2R3d4Qm5XT1I2SXJJSTN1RXhwMWJGOU9iLVppM3F6YVpHT1Z3TDRNVnYwRzI5RnRvSFA2WGF1WW1uZFM4V3RZNl9JZjd5dzRadUpVbWV4UWE4Yk9taTVSeTUxNzM4cGwzR3JpS3dNcjdWTTJiYjh5VEZUVVJsUWVrVVNMYmttVXpYV1V0bVdjSUNCSzJyUVhnYUlmVnA5ZnNVQ0x3YS12eVIwZDcyWjdrZzkxclBUOWpQd0FBMlBYU0dzQTBYM1kta1R3MDdrVXBzQzRNQUdrOXYxRWR0MkFmbW1vTURncFV3R2N5dGtBb0IzemVxczg2RWVCQzFmZEFXcThMa0JnQ2NFNFpWQllCZjF4REtJaDhLZTJReW1PMFBEckk1NVJB",
+                "conversionDelaySeconds": 4,
+                "externalAdReply": {
+                  "title": "Rastreio e Tracking de WPP",
+                  "body": "Você faz campanhas direto para o WPP?\n\nSabia que é possível ter um sistema completo de rastreio e tracking de ponta a ponta? Isso mesmo, você não tem só a origem dos leads (UTMs) mas também devolve a conversão que ocorreu dentro da conversa direto para o pixel.\n\nClique em Saiba Mais e entre em contato conosco para te apresentarmos a nossa solução inovadora do Rastracking.",
+                  "mediaType": "VIDEO",
+                  "thumbnailUrl": "https://scontent.xx.fbcdn.net/v/t15.5256-10/455812560_859693189037052_6561012719011299619_n.jpg?stp=dst-jpg_p180x540&_nc_cat=105&ccb=1-7&_nc_sid=099685&_nc_ohc=1sGk7U3fF80Q7kNvgENNGAH&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&_nc_gid=ABWsB4V-4g_nwegDT7n2-02&oh=00_AYDGL7A6rMl9RM4neFH3vuqkjMrCwTMphLvXYPvt_rOPIQ&oe=66EA397B",
+                  "mediaUrl": "https://www.facebook.com/dericsoncalari/videos/3810417475905123/",
+                  "thumbnail": "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",
+                  "sourceType": "ad",
+                  "sourceId": "120213008132720555",
+                  "sourceUrl": "https://www.instagram.com/p/C-tNHk_gbQf/",
+                  "containsAutoReply": false,
+                  "renderLargerThumbnail": true,
+                  "showAdAttribution": true,
+                  "ctwaClid": "ARBOL5G8rOiK-9u5gnnO8CPCR60WQeF5V51AI64F3IKoMpklpHTaB8pMeRU8TICHcbjxzGeGXAkndwcuGxMQSfAQJffiNgMoIYMAwiI5wc1hi6ysSTOFtH_b7psUdIZAo8Ts"
+                },
+                "trustBannerAction": 4294967295
+              },
+              "messageType": "extendedTextMessage",
+              "messageTimestamp": 1727448763,
+              "instanceId": "2152e6f5-14d1-420b-9611-c6a4e325d311",
+              "source": "android"
+            },
+            "destination": "https://webhook.samuelchoairy.com/webhook/c6bec62f-541e-4a43-8841-de22624ed513",
+            "date_time": "2024-09-27T11:52:43.324Z",
+            "sender": "5511933444333@s.whatsapp.net",
+            "server_url": "https://wsapi.samuelchoairy.com",
+            "apikey": "457C23B91839-431F-AFD2-5C50DDB6D53B"
+          },
+          "webhookUrl": "https://webhook.samuelchoairy.com/webhook/c6bec62f-541e-4a43-8841-de22624ed513",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "createdAt": "2025-08-21T23:18:11.085Z",
+      "updatedAt": "2025-08-21T23:18:11.085Z",
+      "role": "workflow:owner",
+      "workflowId": "j7HygeZCeF0gQQyw",
+      "projectId": "9qrimWxJSBUg3pgh"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-08-22T00:30:29.895Z",
+  "versionId": "86e331d3-53aa-490b-a54c-0c4d6473d3a4"
+}
